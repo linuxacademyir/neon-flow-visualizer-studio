@@ -26,7 +26,12 @@ const nodeCategories = {
 };
 
 export const NodeSidebar = ({ setNodes }: any) => {
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
+    triggers: true,
+    actions: true,
+    controllers: true,
+    extras: true
+  });
 
   const toggleCategory = (category: string) => {
     setCollapsed(prev => ({ ...prev, [category]: !prev[category] }));

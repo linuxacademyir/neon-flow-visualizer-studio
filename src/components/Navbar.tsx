@@ -1,6 +1,6 @@
 
 import { useRef } from 'react';
-import { Download, Upload, FileDown, Lock, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import { Download, Upload, FileDown } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import html2canvas from 'html2canvas';
 
@@ -12,7 +12,7 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
-  const { fitView, zoomIn, zoomOut } = useReactFlow();
+  const { fitView } = useReactFlow();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const exportWorkflow = () => {
@@ -116,39 +116,6 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
           <FileDown size={16} />
           <span>Download</span>
         </button>
-
-        <div className="flex items-center space-x-2 bg-gray-700 rounded p-1">
-          <button
-            onClick={() => zoomOut()}
-            className="p-2 text-gray-300 hover:text-white transition-colors"
-            title="Zoom Out"
-          >
-            <ZoomOut size={16} />
-          </button>
-
-          <button
-            onClick={() => zoomIn()}
-            className="p-2 text-gray-300 hover:text-white transition-colors"
-            title="Zoom In"
-          >
-            <ZoomIn size={16} />
-          </button>
-
-          <button
-            onClick={() => fitView()}
-            className="p-2 text-gray-300 hover:text-white transition-colors"
-            title="Fit View"
-          >
-            <Maximize size={16} />
-          </button>
-
-          <button
-            className="p-2 text-gray-300 hover:text-white transition-colors"
-            title="Lock"
-          >
-            <Lock size={16} />
-          </button>
-        </div>
       </div>
 
       <input

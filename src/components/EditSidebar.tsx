@@ -11,6 +11,11 @@ interface EditSidebarProps {
   onEditNode: (nodeId: string) => void;
 }
 
+const nodeTypeOptions = {
+  trigger: ['Time based', 'System based', 'User based', 'Participant based', 'AI agent based'],
+  action: ['System based action', 'User based action', 'Participant based action', 'AI agent based action']
+};
+
 export const EditSidebar = ({ 
   isOpen, 
   onClose, 
@@ -20,12 +25,14 @@ export const EditSidebar = ({
   const [name, setName] = useState('');
   const [actor, setActor] = useState('');
   const [description, setDescription] = useState('');
+  const [selectedType, setSelectedType] = useState('');
 
   useEffect(() => {
     if (selectedNode) {
       setName(selectedNode.data.name || selectedNode.data.label || '');
       setActor(selectedNode.data.actor || '');
       setDescription(selectedNode.data.description || '');
+      setSelectedType(selectedNode.data.label || '');
     }
   }, [selectedNode]);
 
@@ -35,7 +42,18 @@ export const EditSidebar = ({
     }
   };
 
+  const handleTypeChange = (newType: string) => {
+    setSelectedType(newType);
+    if (selectedNode) {
+      onUpdateNode(selectedNode.id, { label: newType, name: newType });
+      setName(newType);
+    }
+  };
+
   if (!isOpen) return null;
+
+  const canChangeType = selectedNode && (selectedNode.type === 'trigger' || selectedNode.type === 'action');
+  const typeOptions = selectedNode?.type === 'trigger' ? nodeTypeOptions.trigger : nodeTypeOptions.action;
 
   return (
     <div className="w-80 bg-gray-800 border-l border-gray-700 p-4 overflow-y-auto">
@@ -51,6 +69,25 @@ export const EditSidebar = ({
 
       {selectedNode && (
         <div className="space-y-4">
+          {canChangeType && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Node Type
+              </label>
+              <select
+                value={selectedType}
+                onChange={(e) => handleTypeChange(e.target.value)}
+                className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {typeOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Node Name

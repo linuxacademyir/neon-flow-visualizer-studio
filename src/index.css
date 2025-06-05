@@ -79,6 +79,8 @@
 .react-flow__node-action {
   border-color: #00bfff;
   border-radius: 12px;
+  min-width: 120px;
+  width: 120px;
 }
 
 .react-flow__node-controller {
