@@ -25,6 +25,7 @@ export const EditSidebar = ({
   const [name, setName] = useState('');
   const [actor, setActor] = useState('');
   const [description, setDescription] = useState('');
+  const [notes, setNotes] = useState('');
   const [selectedType, setSelectedType] = useState('');
 
   useEffect(() => {
@@ -32,21 +33,22 @@ export const EditSidebar = ({
       setName(selectedNode.data.name || selectedNode.data.label || '');
       setActor(selectedNode.data.actor || '');
       setDescription(selectedNode.data.description || '');
+      setNotes(selectedNode.data.notes || '');
       setSelectedType(selectedNode.data.label || '');
     }
   }, [selectedNode]);
 
   const handleSave = () => {
     if (selectedNode) {
-      onUpdateNode(selectedNode.id, { name, actor, description });
+      onUpdateNode(selectedNode.id, { name, actor, description, notes });
     }
   };
 
   const handleTypeChange = (newType: string) => {
     setSelectedType(newType);
     if (selectedNode) {
-      onUpdateNode(selectedNode.id, { label: newType, name: newType });
-      setName(newType);
+      onUpdateNode(selectedNode.id, { label: newType });
+      // Don't automatically change the name when type changes
     }
   };
 
@@ -54,6 +56,7 @@ export const EditSidebar = ({
 
   const canChangeType = selectedNode && (selectedNode.type === 'trigger' || selectedNode.type === 'action');
   const typeOptions = selectedNode?.type === 'trigger' ? nodeTypeOptions.trigger : nodeTypeOptions.action;
+  const isNoteNode = selectedNode && (selectedNode.data.label === 'Comment' || selectedNode.data.label === 'Annotation');
 
   return (
     <div className="w-80 bg-gray-800 border-l border-gray-700 p-4 overflow-y-auto">
@@ -102,31 +105,33 @@ export const EditSidebar = ({
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Node Actor
-            </label>
-            <input
-              type="text"
-              value={actor}
-              onChange={(e) => setActor(e.target.value)}
-              onBlur={handleSave}
-              className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter node actor"
-            />
-          </div>
+          {!isNoteNode && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Node Actor
+              </label>
+              <input
+                type="text"
+                value={actor}
+                onChange={(e) => setActor(e.target.value)}
+                onBlur={handleSave}
+                className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter node actor"
+              />
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Description
+              {isNoteNode ? 'Notes' : 'Description'}
             </label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={isNoteNode ? notes : description}
+              onChange={(e) => isNoteNode ? setNotes(e.target.value) : setDescription(e.target.value)}
               onBlur={handleSave}
               rows={4}
               className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              placeholder="Enter node description"
+              placeholder={isNoteNode ? "Enter your notes..." : "Enter node description"}
             />
           </div>
 

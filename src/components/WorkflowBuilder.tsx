@@ -54,6 +54,8 @@ export const WorkflowBuilder = () => {
   const deleteNode = useCallback((nodeId: string) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+    setEditSidebarOpen(false);
+    setSelectedNode(null);
   }, [setNodes, setEdges]);
 
   const editNode = useCallback((nodeId: string) => {
@@ -77,6 +79,16 @@ export const WorkflowBuilder = () => {
     }
   }, [setNodes, selectedNode]);
 
+  // Add edit and delete handlers to node data
+  const enhancedNodes = nodes.map(node => ({
+    ...node,
+    data: {
+      ...node.data,
+      onEdit: editNode,
+      onDelete: deleteNode,
+    }
+  }));
+
   return (
     <div className="h-screen w-full bg-gray-900 text-white">
       <ReactFlowProvider>
@@ -87,7 +99,7 @@ export const WorkflowBuilder = () => {
           
           <div className="flex-1 relative" ref={reactFlowWrapper}>
             <ReactFlow
-              nodes={nodes}
+              nodes={enhancedNodes}
               edges={edges}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}

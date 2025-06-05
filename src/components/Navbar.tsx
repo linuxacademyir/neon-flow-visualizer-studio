@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect } from 'react';
 import { Download, Upload, FileDown, Sun, Moon } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
@@ -104,37 +105,37 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
       <div className="flex items-center space-x-4">
         <button
           onClick={toggleTheme}
-          className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded text-sm transition-colors"
+          className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
         >
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
+          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
         <h1 className="text-xl font-bold text-white">Workflow Builder</h1>
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2">
         <button
           onClick={exportWorkflow}
-          className="flex items-center space-x-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
+          className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
+          title="Export workflow"
         >
-          <Upload size={16} />
-          <span>Export</span>
+          <Upload size={18} />
         </button>
 
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center space-x-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
+          className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
+          title="Import workflow"
         >
-          <Download size={16} />
-          <span>Import</span>
+          <Download size={18} />
         </button>
 
         <button
           onClick={downloadAsPNG}
-          className="flex items-center space-x-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm transition-colors"
+          className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
+          title="Download as PNG"
         >
-          <FileDown size={16} />
-          <span>Download</span>
+          <FileDown size={18} />
         </button>
       </div>
 

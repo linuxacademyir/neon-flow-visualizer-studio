@@ -58,6 +58,9 @@ const iconMap = {
 
 export const CustomNode = memo(({ id, data, type }: any) => {
   const IconComponent = iconMap[data.label as keyof typeof iconMap] || Settings;
+  
+  // Show custom name if available, otherwise show label
+  const displayName = data.name && data.name !== data.label ? data.name : data.label;
 
   return (
     <div className={`react-flow__node-${type}`}>
@@ -65,7 +68,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
       
       <div className="node-content">
         <IconComponent size={type === 'trigger' ? 16 : 18} />
-        <span>{data.label}</span>
+        <span>{displayName}</span>
       </div>
       
       <div className="node-toolbar">
