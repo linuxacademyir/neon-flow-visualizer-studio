@@ -51,11 +51,6 @@ export const WorkflowBuilder = () => {
     setSelectedNode(null);
   }, []);
 
-  const onPaneDoubleClick = useCallback(() => {
-    setEditSidebarOpen(false);
-    setSelectedNode(null);
-  }, []);
-
   const deleteNode = useCallback((nodeId: string) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
@@ -99,7 +94,6 @@ export const WorkflowBuilder = () => {
               onConnect={onConnect}
               onNodeClick={onNodeClick}
               onPaneClick={onPaneClick}
-              onPaneDoubleClick={onPaneDoubleClick}
               nodeTypes={nodeTypes}
               className="bg-gray-900"
               proOptions={{ hideAttribution: true }}
