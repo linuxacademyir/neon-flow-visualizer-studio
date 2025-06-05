@@ -1,6 +1,5 @@
-
-import { useRef } from 'react';
-import { Download, Upload, FileDown } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
+import { Download, Upload, FileDown, Sun, Moon } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import html2canvas from 'html2canvas';
 
@@ -14,6 +13,20 @@ interface NavbarProps {
 export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
   const { fitView } = useReactFlow();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
   const exportWorkflow = () => {
     const workflow = {
@@ -73,7 +86,7 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
 
     try {
       const canvas = await html2canvas(element, {
-        backgroundColor: '#121217',
+        backgroundColor: theme === 'dark' ? '#121217' : '#ffffff',
         scale: 2
       });
       
@@ -89,6 +102,13 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
   return (
     <nav className="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-6">
       <div className="flex items-center space-x-4">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded text-sm transition-colors"
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
+        </button>
         <h1 className="text-xl font-bold text-white">Workflow Builder</h1>
       </div>
 

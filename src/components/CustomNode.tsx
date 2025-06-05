@@ -63,9 +63,9 @@ export const CustomNode = memo(({ id, data, type }: any) => {
     <div className={`react-flow__node-${type}`}>
       <Handle type="target" position={Position.Top} />
       
-      <div className="node-content flex flex-col items-center justify-center">
-        <IconComponent size={20} className="mb-1" />
-        <span className="text-xs font-medium">{data.label}</span>
+      <div className="node-content">
+        <IconComponent size={type === 'trigger' ? 16 : 18} />
+        <span>{data.label}</span>
       </div>
       
       <div className="node-toolbar">
