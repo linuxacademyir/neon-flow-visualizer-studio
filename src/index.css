@@ -128,23 +128,32 @@
 }
 
 .react-flow__node-controller {
-  border-color: #ff00ff;
+  background: none !important;
+  border: none !important;
   color: #ff00ff;
-  background: black;
   width: 100px;
   height: 100px;
   min-width: 100px;
-  padding: 8px;
+  padding: 0;
   transform: rotate(45deg);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #ff00ff;
   border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
-[data-theme="light"] .react-flow__node-controller {
-  background: white;
+.react-flow__node-controller::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: none;
+  border: 2px solid #ff00ff;
+  transform: none;
+  z-index: 1;
 }
 
 .react-flow__node-controller .node-content {
@@ -153,12 +162,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 2;
+  position: relative;
 }
 
 .react-flow__node-controller .node-toolbar {
   transform: rotate(-45deg);
   top: -15px;
   right: -15px;
+  z-index: 3;
 }
 
 .react-flow__node-extra {

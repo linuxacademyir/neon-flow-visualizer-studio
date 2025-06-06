@@ -83,12 +83,18 @@ export const CustomNode = memo(({ id, data, type }: any) => {
 
   return (
     <div className={`react-flow__node-${type}`} title={hoverText}>
-      {/* Single left handle */}
+      {/* Left handle */}
       <Handle 
         type="target" 
         position={Position.Left} 
         id="left"
         className="react-flow__handle"
+        style={type === 'controller' ? { 
+          left: '-7px', 
+          top: '50%', 
+          transform: 'translateY(-50%) rotate(-45deg)',
+          zIndex: 20
+        } : {}}
       />
       
       <div className="node-content">
@@ -105,12 +111,18 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         </button>
       </div>
       
-      {/* Single right handle */}
+      {/* Right handle */}
       <Handle 
         type="source" 
         position={Position.Right} 
         id="right"
         className="react-flow__handle"
+        style={type === 'controller' ? { 
+          right: '-7px', 
+          top: '50%', 
+          transform: 'translateY(-50%) rotate(-45deg)',
+          zIndex: 20
+        } : {}}
       />
     </div>
   );

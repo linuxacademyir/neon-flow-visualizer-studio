@@ -12,7 +12,8 @@ interface EditSidebarProps {
 
 const nodeTypeOptions = {
   trigger: ['System based', 'User based', 'Participant based', 'AI agent based'],
-  action: ['System based action', 'User based action', 'Participant based action', 'AI agent based action']
+  action: ['System based action', 'User based action', 'Participant based action', 'AI agent based action'],
+  controller: ['Condition', 'Parallel', 'Switch', 'Loop handler', 'Aggregator', 'Timeout controller', 'Sleep', 'Joint', 'Retry', 'Timeout', 'Pause until', 'Validation']
 };
 
 export const EditSidebar = ({ 
@@ -32,6 +33,8 @@ export const EditSidebar = ({
       setDescription(selectedNode.data.description || '');
       setNotes(selectedNode.data.notes || '');
       setSelectedType(selectedNode.data.label || '');
+      console.log('Selected node type:', selectedNode.type);
+      console.log('Selected node data:', selectedNode.data);
     }
   }, [selectedNode]);
 
@@ -50,8 +53,18 @@ export const EditSidebar = ({
 
   if (!isOpen) return null;
 
-  const canChangeType = selectedNode && (selectedNode.type === 'trigger' || selectedNode.type === 'action');
-  const typeOptions = selectedNode?.type === 'trigger' ? nodeTypeOptions.trigger : nodeTypeOptions.action;
+  const isController = selectedNode?.type === 'controller';
+  const canChangeType = selectedNode && (selectedNode.type === 'trigger' || selectedNode.type === 'action' || selectedNode.type === 'controller');
+  
+  let typeOptions = [];
+  if (selectedNode?.type === 'trigger') {
+    typeOptions = nodeTypeOptions.trigger;
+  } else if (selectedNode?.type === 'action') {
+    typeOptions = nodeTypeOptions.action;
+  } else if (selectedNode?.type === 'controller') {
+    typeOptions = nodeTypeOptions.controller;
+  }
+  
   const isCommentNode = selectedNode && selectedNode.data.label === 'Comment';
 
   return (
@@ -71,7 +84,7 @@ export const EditSidebar = ({
           {canChangeType && (
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Node Type
+                Node Type {isController && "(Controller)"}
               </label>
               <select
                 value={selectedType}
