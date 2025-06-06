@@ -12,7 +12,7 @@ interface EditSidebarProps {
 }
 
 const nodeTypeOptions = {
-  trigger: ['Time based', 'System based', 'User based', 'Participant based', 'AI agent based'],
+  trigger: ['System based', 'User based', 'Participant based', 'AI agent based'],
   action: ['System based action', 'User based action', 'Participant based action', 'AI agent based action']
 };
 
@@ -48,7 +48,6 @@ export const EditSidebar = ({
     setSelectedType(newType);
     if (selectedNode) {
       onUpdateNode(selectedNode.id, { label: newType });
-      // Don't automatically change the name when type changes
     }
   };
 
@@ -56,7 +55,7 @@ export const EditSidebar = ({
 
   const canChangeType = selectedNode && (selectedNode.type === 'trigger' || selectedNode.type === 'action');
   const typeOptions = selectedNode?.type === 'trigger' ? nodeTypeOptions.trigger : nodeTypeOptions.action;
-  const isNoteNode = selectedNode && (selectedNode.data.label === 'Comment' || selectedNode.data.label === 'Annotation');
+  const isCommentNode = selectedNode && selectedNode.data.label === 'Comment';
 
   return (
     <div className="w-80 bg-gray-800 border-l border-gray-700 p-4 overflow-y-auto">
@@ -93,7 +92,7 @@ export const EditSidebar = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Node Name
+              Custom Name
             </label>
             <input
               type="text"
@@ -101,11 +100,11 @@ export const EditSidebar = ({
               onChange={(e) => setName(e.target.value)}
               onBlur={handleSave}
               className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter node name"
+              placeholder="Enter custom name"
             />
           </div>
 
-          {!isNoteNode && (
+          {!isCommentNode && (
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Node Actor
@@ -123,15 +122,15 @@ export const EditSidebar = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              {isNoteNode ? 'Notes' : 'Description'}
+              {isCommentNode ? 'Comment' : 'Description'}
             </label>
             <textarea
-              value={isNoteNode ? notes : description}
-              onChange={(e) => isNoteNode ? setNotes(e.target.value) : setDescription(e.target.value)}
+              value={isCommentNode ? notes : description}
+              onChange={(e) => isCommentNode ? setNotes(e.target.value) : setDescription(e.target.value)}
               onBlur={handleSave}
-              rows={4}
+              rows={isCommentNode ? 3 : 4}
               className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              placeholder={isNoteNode ? "Enter your notes..." : "Enter node description"}
+              placeholder={isCommentNode ? "Enter your comment..." : "Enter node description"}
             />
           </div>
 

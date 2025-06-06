@@ -117,7 +117,7 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
         <button
           onClick={exportWorkflow}
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
-          title="Export workflow"
+          title="Export workflow as JSON"
         >
           <Upload size={18} />
         </button>
@@ -125,7 +125,7 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
         <button
           onClick={() => fileInputRef.current?.click()}
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
-          title="Import workflow"
+          title="Import workflow from JSON"
         >
           <Download size={18} />
         </button>
@@ -133,7 +133,7 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
         <button
           onClick={downloadAsPNG}
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
-          title="Download as PNG"
+          title="Download workflow as PNG image"
         >
           <FileDown size={18} />
         </button>
