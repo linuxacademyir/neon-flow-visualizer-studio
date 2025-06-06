@@ -4,12 +4,10 @@ import { Handle, Position } from '@xyflow/react';
 import { 
   Edit, 
   Trash2,
-  Clock,
-  Database,
+  Settings,
   User,
   Users,
   Bot,
-  Settings,
   GitBranch,
   RotateCcw,
   Pause,
@@ -20,7 +18,6 @@ import {
   Play,
   CheckCircle,
   MessageSquare,
-  FileText
 } from 'lucide-react';
 
 const iconMap = {
@@ -57,10 +54,21 @@ const iconMap = {
 export const CustomNode = memo(({ id, data, type }: any) => {
   const IconComponent = iconMap[data.label as keyof typeof iconMap] || Settings;
   
-  // Show original label for display, custom name on hover
-  const displayName = data.label;
-  const customName = data.name && data.name !== data.label ? data.name : null;
-  const hoverText = customName || data.description || '';
+  // Show custom name if available, otherwise show original label
+  const displayName = data.name && data.name !== data.label ? data.name : data.label;
+  
+  // Create tooltip text - show custom name in full if it exists, plus description/notes
+  const tooltipParts = [];
+  if (data.name && data.name !== data.label) {
+    tooltipParts.push(`Name: ${data.name}`);
+  }
+  if (data.description) {
+    tooltipParts.push(`Description: ${data.description}`);
+  }
+  if (data.notes) {
+    tooltipParts.push(`Notes: ${data.notes}`);
+  }
+  const hoverText = tooltipParts.length > 0 ? tooltipParts.join('\n') : '';
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -76,20 +84,12 @@ export const CustomNode = memo(({ id, data, type }: any) => {
 
   return (
     <div className={`react-flow__node-${type}`} title={hoverText}>
-      {/* Left side handles */}
+      {/* Single left handle */}
       <Handle 
         type="target" 
         position={Position.Left} 
-        id="left-1"
+        id="left"
         className="connection-handle"
-        style={{ top: '30%' }}
-      />
-      <Handle 
-        type="target" 
-        position={Position.Left} 
-        id="left-2"
-        className="connection-handle"
-        style={{ top: '70%' }}
       />
       
       <div className="node-content">
@@ -106,20 +106,12 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         </button>
       </div>
       
-      {/* Right side handles */}
+      {/* Single right handle */}
       <Handle 
         type="source" 
         position={Position.Right} 
-        id="right-1"
+        id="right"
         className="connection-handle"
-        style={{ top: '30%' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Right} 
-        id="right-2"
-        className="connection-handle"
-        style={{ top: '70%' }}
       />
     </div>
   );
