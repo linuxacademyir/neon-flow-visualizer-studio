@@ -90,6 +90,12 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         position={Position.Left} 
         id="left"
         className="connection-handle"
+        style={{ 
+          left: '-7px', 
+          top: '50%', 
+          transform: 'translateY(-50%)',
+          position: 'absolute'
+        }}
       />
       
       <div className="node-content">
@@ -112,6 +118,12 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         position={Position.Right} 
         id="right"
         className="connection-handle"
+        style={{ 
+          right: '-7px', 
+          top: '50%', 
+          transform: 'translateY(-50%)',
+          position: 'absolute'
+        }}
       />
     </div>
   );
