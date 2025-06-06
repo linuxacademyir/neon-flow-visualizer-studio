@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
@@ -23,7 +22,6 @@ export const EditSidebar = ({
   onUpdateNode 
 }: EditSidebarProps) => {
   const [name, setName] = useState('');
-  const [actor, setActor] = useState('');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState('');
   const [selectedType, setSelectedType] = useState('');
@@ -31,7 +29,6 @@ export const EditSidebar = ({
   useEffect(() => {
     if (selectedNode) {
       setName(selectedNode.data.name || selectedNode.data.label || '');
-      setActor(selectedNode.data.actor || '');
       setDescription(selectedNode.data.description || '');
       setNotes(selectedNode.data.notes || '');
       setSelectedType(selectedNode.data.label || '');
@@ -40,7 +37,7 @@ export const EditSidebar = ({
 
   const handleSave = () => {
     if (selectedNode) {
-      onUpdateNode(selectedNode.id, { name, actor, description, notes });
+      onUpdateNode(selectedNode.id, { name, description, notes });
     }
   };
 
@@ -103,22 +100,6 @@ export const EditSidebar = ({
               placeholder="Enter custom name"
             />
           </div>
-
-          {!isCommentNode && (
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Node Actor
-              </label>
-              <input
-                type="text"
-                value={actor}
-                onChange={(e) => setActor(e.target.value)}
-                onBlur={handleSave}
-                className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter node actor"
-              />
-            </div>
-          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">

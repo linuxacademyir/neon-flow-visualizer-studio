@@ -1,4 +1,3 @@
-
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { 
@@ -89,13 +88,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         type="target" 
         position={Position.Left} 
         id="left"
-        className="connection-handle"
-        style={{ 
-          left: '-7px', 
-          top: '50%', 
-          transform: 'translateY(-50%)',
-          position: 'absolute'
-        }}
+        className="react-flow__handle"
       />
       
       <div className="node-content">
@@ -117,13 +110,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         type="source" 
         position={Position.Right} 
         id="right"
-        className="connection-handle"
-        style={{ 
-          right: '-7px', 
-          top: '50%', 
-          transform: 'translateY(-50%)',
-          position: 'absolute'
-        }}
+        className="react-flow__handle"
       />
     </div>
   );

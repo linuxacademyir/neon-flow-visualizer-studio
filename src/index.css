@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -129,7 +130,7 @@
 .react-flow__node-controller {
   border-color: #ff00ff;
   color: #ff00ff;
-  border-radius: 0;
+  background: black;
   width: 100px;
   height: 100px;
   min-width: 100px;
@@ -138,8 +139,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
   border: 2px solid #ff00ff;
+  border-radius: 0;
+}
+
+[data-theme="light"] .react-flow__node-controller {
+  background: white;
 }
 
 .react-flow__node-controller .node-content {
@@ -154,23 +159,6 @@
   transform: rotate(-45deg);
   top: -15px;
   right: -15px;
-}
-
-.react-flow__node-controller .connection-handle {
-  transform: rotate(-45deg);
-  position: absolute;
-}
-
-.react-flow__node-controller .connection-handle[data-handlepos="left"] {
-  left: -7px;
-  top: 50%;
-  transform: rotate(-45deg) translateY(-50%);
-}
-
-.react-flow__node-controller .connection-handle[data-handlepos="right"] {
-  right: -7px;
-  top: 50%;
-  transform: rotate(-45deg) translateY(-50%);
 }
 
 .react-flow__node-extra {
@@ -221,6 +209,27 @@
 
 .react-flow__handle {
   pointer-events: all;
+  background: linear-gradient(135deg, #fff 0%, #e6e6e6 50%, #fff 100%);
+  border: 2px solid #333;
+  width: 14px;
+  height: 14px;
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.react-flow__handle:hover {
+  background: linear-gradient(135deg, #4CAF50 0%, #2196F3 50%, #4CAF50 100%);
+  box-shadow: 
+    0 0 15px rgba(76, 175, 80, 1),
+    inset 0 1px 3px rgba(255, 255, 255, 0.9),
+    0 3px 6px rgba(0, 0, 0, 0.4);
+  transform: scale(1.3);
+  border-color: #fff;
 }
 
 .react-flow__handle.connectionindicator {
