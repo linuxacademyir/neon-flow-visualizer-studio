@@ -1,4 +1,3 @@
-
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { 
@@ -81,12 +80,6 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         position={Position.Left} 
         id="left"
         className="react-flow__handle"
-        style={type === 'controller' ? { 
-          left: '-6px', 
-          top: '50%', 
-          transform: 'translateY(-50%)',
-          zIndex: 100
-        } : {}}
       />
       
       <div className="node-content">
@@ -109,12 +102,6 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         position={Position.Right} 
         id="right"
         className="react-flow__handle"
-        style={type === 'controller' ? { 
-          right: '-6px', 
-          top: '50%', 
-          transform: 'translateY(-50%)',
-          zIndex: 100
-        } : {}}
       />
     </div>
   );
