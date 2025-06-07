@@ -90,9 +90,9 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         id="left"
         className="react-flow__handle"
         style={type === 'controller' ? { 
-          left: '-7px', 
+          left: '0px', 
           top: '50%', 
-          transform: 'translateY(-50%) rotate(-45deg)',
+          transform: 'translateX(-50%) translateY(-50%)',
           zIndex: 20
         } : {}}
       />
@@ -118,9 +118,9 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         id="right"
         className="react-flow__handle"
         style={type === 'controller' ? { 
-          right: '-7px', 
+          right: '0px', 
           top: '50%', 
-          transform: 'translateY(-50%) rotate(-45deg)',
+          transform: 'translateX(50%) translateY(-50%)',
           zIndex: 20
         } : {}}
       />
