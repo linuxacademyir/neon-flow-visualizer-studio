@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Zap, Play, Diamond, FileText } from 'lucide-react';
 
@@ -19,7 +18,7 @@ const nodeCategories = {
     color: '#ff00ff',
     shape: 'diamond',
     icon: Diamond,
-    items: ['Condition', 'Parallel', 'Switch', 'Loop handler', 'Aggregator', 'Timeout controller', 'Sleep', 'Joint', 'Retry', 'Timeout', 'Pause until', 'Validation']
+    items: ['Router', 'Join', 'Wait', 'Escalation', 'Iterator', 'Aggregator']
   },
   extras: {
     color: '#ffff00',

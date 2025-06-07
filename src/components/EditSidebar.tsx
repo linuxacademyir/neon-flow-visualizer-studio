@@ -13,7 +13,7 @@ interface EditSidebarProps {
 const nodeTypeOptions = {
   trigger: ['System based', 'User based', 'Participant based', 'AI agent based'],
   action: ['System based action', 'User based action', 'Participant based action', 'AI agent based action'],
-  controller: ['Condition', 'Parallel', 'Switch', 'Loop handler', 'Aggregator', 'Timeout controller', 'Sleep', 'Joint', 'Retry', 'Timeout', 'Pause until', 'Validation']
+  controller: ['Router', 'Join', 'Wait', 'Escalation', 'Iterator', 'Aggregator']
 };
 
 export const EditSidebar = ({ 

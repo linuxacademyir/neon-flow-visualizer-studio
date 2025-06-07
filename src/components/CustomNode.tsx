@@ -7,15 +7,12 @@ import {
   User,
   Users,
   Bot,
-  GitBranch,
-  RotateCcw,
-  Pause,
+  Router,
+  JoinIcon as Join,
   Timer,
+  AlertTriangle,
+  RotateCcw,
   Merge,
-  RefreshCw,
-  StopCircle,
-  Play,
-  CheckCircle,
   MessageSquare,
 } from 'lucide-react';
 
@@ -32,19 +29,13 @@ const iconMap = {
   'Participant based action': Users,
   'AI agent based action': Bot,
   
-  // Controllers
-  'Condition': GitBranch,
-  'Parallel': GitBranch,
-  'Switch': GitBranch,
-  'Loop handler': RotateCcw,
+  // Controllers (updated to use correct lucide-react icons)
+  'Router': Router,
+  'Join': Join,
+  'Wait': Timer,
+  'Escalation': AlertTriangle,
+  'Iterator': RotateCcw,
   'Aggregator': Merge,
-  'Timeout controller': Timer,
-  'Sleep': Pause,
-  'Joint': Merge,
-  'Retry': RefreshCw,
-  'Timeout': StopCircle,
-  'Pause until': Play,
-  'Validation': CheckCircle,
   
   // Extras
   'Comment': MessageSquare,
