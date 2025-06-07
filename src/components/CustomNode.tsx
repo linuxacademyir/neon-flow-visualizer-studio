@@ -1,3 +1,4 @@
+
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { 
@@ -8,7 +9,7 @@ import {
   Users,
   Bot,
   Router,
-  JoinIcon as Join,
+  Merge as Join,
   Timer,
   AlertTriangle,
   RotateCcw,
