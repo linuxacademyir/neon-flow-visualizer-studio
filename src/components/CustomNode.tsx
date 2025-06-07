@@ -1,3 +1,4 @@
+
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { 
@@ -74,12 +75,22 @@ export const CustomNode = memo(({ id, data, type }: any) => {
 
   return (
     <div className={`react-flow__node-${type}`} title={hoverText}>
-      {/* Left handle */}
+      {/* Left handle - SIMPLIFIED */}
       <Handle 
         type="target" 
-        position={Position.Left} 
-        id="left"
-        className="react-flow__handle"
+        position={Position.Left}
+        isConnectable={true}
+        style={{ 
+          left: -10,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: 16,
+          height: 16,
+          background: '#ffffff',
+          border: '3px solid #333333',
+          borderRadius: '50%',
+          zIndex: 999
+        }}
       />
       
       <div className="node-content">
@@ -96,12 +107,22 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         </button>
       </div>
       
-      {/* Right handle */}
+      {/* Right handle - SIMPLIFIED */}
       <Handle 
         type="source" 
-        position={Position.Right} 
-        id="right"
-        className="react-flow__handle"
+        position={Position.Right}
+        isConnectable={true}
+        style={{ 
+          right: -10,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: 16,
+          height: 16,
+          background: '#ffffff',
+          border: '3px solid #333333',
+          borderRadius: '50%',
+          zIndex: 999
+        }}
       />
     </div>
   );
