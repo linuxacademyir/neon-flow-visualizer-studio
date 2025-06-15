@@ -26,8 +26,54 @@ const nodeTypes = {
   extra: CustomNode,
 };
 
-const initialNodes: Node[] = [];
-const initialEdges: Edge[] = [];
+// Email signature workflow initial setup
+const initialNodes: Node[] = [
+  {
+    id: 'email-trigger',
+    type: 'trigger',
+    position: { x: 100, y: 100 },
+    data: {
+      label: 'Email Opened',
+      description: 'Triggered when email is opened by recipient',
+      name: 'Email Open Trigger'
+    }
+  },
+  {
+    id: 'cta-action',
+    type: 'action',
+    position: { x: 400, y: 100 },
+    data: {
+      label: 'Track Click',
+      description: 'Track CTA button clicks in email signature',
+      name: 'CTA Tracking'
+    }
+  },
+  {
+    id: 'update-signature',
+    type: 'action',
+    position: { x: 700, y: 100 },
+    data: {
+      label: 'Update Signature',
+      description: 'Update email signature with personalized CTA',
+      name: 'Dynamic Signature'
+    }
+  }
+];
+
+const initialEdges: Edge[] = [
+  {
+    id: 'e1',
+    source: 'email-trigger',
+    target: 'cta-action',
+    type: 'default'
+  },
+  {
+    id: 'e2',
+    source: 'cta-action',
+    target: 'update-signature',
+    type: 'default'
+  }
+];
 
 export const WorkflowBuilder = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -79,7 +125,6 @@ export const WorkflowBuilder = () => {
     }
   }, [setNodes, selectedNode]);
 
-  // Add edit and delete handlers to node data
   const enhancedNodes = nodes.map(node => ({
     ...node,
     data: {
@@ -90,14 +135,14 @@ export const WorkflowBuilder = () => {
   }));
 
   return (
-    <div className="h-screen w-full bg-gray-900 text-white">
+    <div className="workflow-builder">
       <ReactFlowProvider>
         <Navbar nodes={nodes} edges={edges} setNodes={setNodes} setEdges={setEdges} />
         
-        <div className="flex h-[calc(100vh-64px)]">
+        <div className="workflow-builder__content">
           <NodeSidebar setNodes={setNodes} />
           
-          <div className="flex-1 relative" ref={reactFlowWrapper}>
+          <div className="workflow-builder__canvas" ref={reactFlowWrapper}>
             <ReactFlow
               nodes={enhancedNodes}
               edges={edges}
@@ -107,10 +152,11 @@ export const WorkflowBuilder = () => {
               onNodeClick={onNodeClick}
               onPaneClick={onPaneClick}
               nodeTypes={nodeTypes}
-              className="bg-gray-900"
+              className="workflow-canvas"
               proOptions={{ hideAttribution: true }}
+              fitView
             >
-              <Controls className="react-flow__controls" />
+              <Controls className="workflow-controls" />
               <Background color="#333" gap={20} />
             </ReactFlow>
           </div>

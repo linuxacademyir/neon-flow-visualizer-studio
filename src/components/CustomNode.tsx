@@ -1,3 +1,4 @@
+
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { 
@@ -14,22 +15,32 @@ import {
   RotateCcw,
   Merge,
   MessageSquare,
+  Mail,
+  MousePointer,
 } from 'lucide-react';
 
 const iconMap = {
-  // Triggers (updated system icon to match actions)
+  // Email specific triggers
+  'Email Opened': Mail,
+  'Link Clicked': MousePointer,
+  'CTA Clicked': MousePointer,
+  
+  // Standard triggers
   'System based': Settings,
   'User based': User,
   'Participant based': Users,
   'AI agent based': Bot,
   
   // Actions
+  'Send Email': Mail,
+  'Update Signature': Edit,
+  'Track Click': MousePointer,
   'System based action': Settings,
   'User based action': User,
   'Participant based action': Users,
   'AI agent based action': Bot,
   
-  // Controllers (updated to use correct lucide-react icons)
+  // Controllers
   'Router': Router,
   'Join': Join,
   'Wait': Timer,
@@ -44,10 +55,8 @@ const iconMap = {
 export const CustomNode = memo(({ id, data, type }: any) => {
   const IconComponent = iconMap[data.label as keyof typeof iconMap] || Settings;
   
-  // Show custom name if available, otherwise show original label
   const displayName = data.name && data.name !== data.label ? data.name : data.label;
   
-  // Create tooltip text - show custom name in full if it exists, plus description/notes
   const tooltipParts = [];
   if (data.name && data.name !== data.label) {
     tooltipParts.push(`Name: ${data.name}`);
@@ -73,25 +82,32 @@ export const CustomNode = memo(({ id, data, type }: any) => {
   };
 
   return (
-    <div className={`react-flow__node-${type}`} title={hoverText}>
-      {/* Use entirely default React Flow handle config */}
-      <Handle type="target" position={Position.Left} />
-      <div className="node-content">
+    <div className={`workflow-node workflow-node--${type}`} title={hoverText}>
+      <Handle 
+        type="target" 
+        position={Position.Left} 
+        className="workflow-handle workflow-handle--target"
+      />
+      
+      <div className="workflow-node__content">
         <IconComponent size={type === 'trigger' ? 14 : 16} />
-        <span>{displayName}</span>
+        <span className="workflow-node__label">{displayName}</span>
       </div>
       
-      <div className="node-toolbar">
-        <button onClick={handleEdit} title="Edit node">
+      <div className="workflow-node__toolbar">
+        <button onClick={handleEdit} title="Edit node" className="workflow-node__button">
           <Edit size={10} />
         </button>
-        <button onClick={handleDelete} title="Delete node">
+        <button onClick={handleDelete} title="Delete node" className="workflow-node__button">
           <Trash2 size={10} />
         </button>
       </div>
       
-      {/* Use entirely default React Flow handle config */}
-      <Handle type="source" position={Position.Right} />
+      <Handle 
+        type="source" 
+        position={Position.Right} 
+        className="workflow-handle workflow-handle--source"
+      />
     </div>
   );
 });

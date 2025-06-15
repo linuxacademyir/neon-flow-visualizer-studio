@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -75,171 +76,128 @@
   }
 }
 
-/* React Flow Dark Theme Customizations */
-.react-flow {
-  background: rgb(18, 18, 23);
-}
-[data-theme="light"] .react-flow {
-  background: rgb(255, 255, 255);
+/* Workflow Builder Layout */
+.workflow-builder {
+  @apply h-screen w-full bg-gray-900 text-white;
 }
 
-.react-flow__node {
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: 8px;
-  border: 2px solid;
-  padding: 8px;
-  min-width: 120px;
-  text-align: center;
-  position: relative;
-  overflow: visible; /* Handles not clipped, but always inside node area */
-  background: black;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* Remove overflow: hidden so handles remain accessible */
+.workflow-builder__content {
+  @apply flex h-[calc(100vh-64px)];
 }
-[data-theme="light"] .react-flow__node {
-  background: white;
-  color: black;
+
+.workflow-builder__canvas {
+  @apply flex-1 relative;
 }
-.react-flow__node-trigger {
-  border-color: #00ff00;
-  color: #00ff00;
-  border-radius: 12px;
-  min-width: 120px;
-  width: 120px;
-  height: 80px;
-  padding: 8px;
+
+/* React Flow Canvas */
+.workflow-canvas {
+  @apply bg-gray-900;
 }
-.react-flow__node-action {
-  border-color: #00bfff;
-  color: #00bfff;
-  border-radius: 12px;
-  min-width: 120px;
-  width: 120px;
-  height: 80px;
-  padding: 8px;
+
+[data-theme="light"] .workflow-canvas {
+  @apply bg-white;
 }
-.react-flow__node-controller {
-  border-color: #ff00ff;
-  color: #ff00ff;
-  border-radius: 12px;
-  min-width: 120px;
-  width: 120px;
-  height: 80px;
-  padding: 8px;
-  background: black;
+
+/* Custom Workflow Nodes */
+.workflow-node {
+  @apply relative bg-black border-2 rounded-xl p-3 min-w-[120px] w-[120px] h-[80px] flex flex-col items-center justify-center text-center font-medium text-xs;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
-[data-theme="light"] .react-flow__node-controller {
-  background: white;
+
+[data-theme="light"] .workflow-node {
+  @apply bg-white text-black;
 }
-.react-flow__node-extra {
-  border-color: #ffff00;
-  color: #ffff00;
-  border-radius: 4px;
-  min-width: 120px;
-  width: 120px;
-  height: 50px;
-  padding: 8px;
+
+.workflow-node--trigger {
+  @apply border-green-400 text-green-400;
 }
+
+.workflow-node--action {
+  @apply border-cyan-400 text-cyan-400;
+}
+
+.workflow-node--controller {
+  @apply border-purple-400 text-purple-400;
+}
+
+.workflow-node--extra {
+  @apply border-yellow-400 text-yellow-400 h-[50px] rounded-md;
+}
+
+/* Node Content */
+.workflow-node__content {
+  @apply flex flex-col items-center justify-center gap-1 h-full;
+}
+
+.workflow-node__label {
+  @apply text-[10px] max-w-full overflow-hidden text-ellipsis whitespace-nowrap;
+}
+
+/* Node Toolbar */
+.workflow-node__toolbar {
+  @apply absolute -top-3 -right-3 flex gap-1 opacity-0 transition-opacity duration-200 z-10;
+}
+
+.workflow-node:hover .workflow-node__toolbar {
+  @apply opacity-100;
+}
+
+.workflow-node__button {
+  @apply bg-gray-800 border border-gray-600 rounded text-white cursor-pointer p-1 w-5 h-5 flex items-center justify-center text-xs;
+}
+
+[data-theme="light"] .workflow-node__button {
+  @apply bg-white border-gray-300 text-black;
+}
+
+.workflow-node__button:hover {
+  @apply bg-gray-700;
+}
+
+[data-theme="light"] .workflow-node__button:hover {
+  @apply bg-gray-100;
+}
+
+/* Connection Handles - CRITICAL FOR PROPER CONNECTIONS */
+.workflow-handle {
+  @apply absolute w-4 h-4 bg-white border-2 border-green-500 rounded-full cursor-crosshair;
+  /* Ensure handles are always interactive and visible */
+  pointer-events: all !important;
+  z-index: 10 !important;
+}
+
+.workflow-handle--target {
+  @apply -left-2;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.workflow-handle--source {
+  @apply -right-2;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.workflow-handle:hover {
+  @apply border-blue-400 bg-blue-100 scale-110;
+  transition: all 0.2s ease;
+}
+
+/* React Flow Edge Styling */
 .react-flow__edge-path {
-  stroke: #666;
+  @apply stroke-gray-400;
   stroke-width: 2;
 }
-.react-flow__edge.dotted .react-flow__edge-path {
-  stroke-dasharray: 5,5;
+
+.react-flow__edge.selected .react-flow__edge-path {
+  @apply stroke-green-400;
 }
 
-/* RESET handle styling to default React Flow */
-.react-flow__handle, .react-flow__handle-left, .react-flow__handle-right {
-  width: 18px !important;
-  height: 18px !important;
-  background: #fff !important;
-  border: 2.5px solid #00e676 !important;
-  border-radius: 50% !important;
-  position: absolute !important;
-  pointer-events: all !important;
-  z-index: 2 !important;
-  box-shadow: 0 0 0 2px #18181b, 0 2px 6px #0002;
-  /* Debug: red outline to verify visual vs clickable - remove after test */
-  box-shadow: 0 0 0 2px #ff0033, 0 2px 6px #0002;
-  transition: border 0.15s, box-shadow 0.15s;
+/* Controls Styling */
+.workflow-controls {
+  @apply bg-gray-800 border border-gray-600 rounded-lg;
 }
 
-/* Place handles *exactly* at node's edge, vertically centered */
-.react-flow__handle-left {
-  left: 0 !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-}
-.react-flow__handle-right {
-  right: 0 !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-}
-/* Remove negative offsets! */
-
-/* Remove custom transform/position for node-content so handle aligns with node edge */
-.node-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  overflow: initial;
-}
-
-.node-content span {
-  font-size: 10px;
-  margin-top: 4px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-.node-toolbar {
-  position: absolute;
-  top: -12px;
-  right: -12px;
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.2s;
-  z-index: 10;
-}
-
-.react-flow__node:hover .node-toolbar {
-  opacity: 1;
-}
-
-.node-toolbar button {
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid #333;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  padding: 4px;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-[data-theme="light"] .node-toolbar button {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #ccc;
-  color: black;
-}
-
-.node-toolbar button:hover {
-  background: rgba(51, 51, 64, 0.9);
-}
-
-[data-theme="light"] .node-toolbar button:hover {
-  background: rgba(229, 229, 229, 0.9);
+[data-theme="light"] .workflow-controls {
+  @apply bg-white border-gray-300;
 }
