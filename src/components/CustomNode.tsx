@@ -1,4 +1,3 @@
-
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { 
@@ -75,14 +74,8 @@ export const CustomNode = memo(({ id, data, type }: any) => {
 
   return (
     <div className={`react-flow__node-${type}`} title={hoverText}>
-      {/* Left handle: Use className for React Flow to recognize */}
-      <Handle 
-        type="target" 
-        position={Position.Left}
-        id="left"
-        className="react-flow__handle react-flow__handle-left"
-      />
-      
+      {/* Use entirely default React Flow handle config */}
+      <Handle type="target" position={Position.Left} />
       <div className="node-content">
         <IconComponent size={type === 'trigger' ? 14 : 16} />
         <span>{displayName}</span>
@@ -97,16 +90,10 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         </button>
       </div>
       
-      {/* Right handle: Use className for React Flow to recognize */}
-      <Handle 
-        type="source" 
-        position={Position.Right}
-        id="right"
-        className="react-flow__handle react-flow__handle-right"
-      />
+      {/* Use entirely default React Flow handle config */}
+      <Handle type="source" position={Position.Right} />
     </div>
   );
 });
 
 CustomNode.displayName = 'CustomNode';
-

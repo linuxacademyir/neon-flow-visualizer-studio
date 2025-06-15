@@ -79,7 +79,6 @@
 .react-flow {
   background: rgb(18, 18, 23);
 }
-
 [data-theme="light"] .react-flow {
   background: rgb(255, 255, 255);
 }
@@ -99,13 +98,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* Remove overflow: hidden so handles remain accessible */
 }
-
 [data-theme="light"] .react-flow__node {
   background: white;
   color: black;
 }
-
 .react-flow__node-trigger {
   border-color: #00ff00;
   color: #00ff00;
@@ -115,7 +113,6 @@
   height: 80px;
   padding: 8px;
 }
-
 .react-flow__node-action {
   border-color: #00bfff;
   color: #00bfff;
@@ -125,7 +122,6 @@
   height: 80px;
   padding: 8px;
 }
-
 .react-flow__node-controller {
   border-color: #ff00ff;
   color: #ff00ff;
@@ -136,11 +132,9 @@
   padding: 8px;
   background: black;
 }
-
 [data-theme="light"] .react-flow__node-controller {
   background: white;
 }
-
 .react-flow__node-extra {
   border-color: #ffff00;
   color: #ffff00;
@@ -150,80 +144,63 @@
   height: 50px;
   padding: 8px;
 }
-
 .react-flow__edge-path {
   stroke: #666;
   stroke-width: 2;
 }
-
 .react-flow__edge.dotted .react-flow__edge-path {
   stroke-dasharray: 5,5;
 }
 
-/* COMPLETELY NEW HANDLE APPROACH - LARGER AND MORE VISIBLE */
-.react-flow__handle {
-  width: 16px !important;
-  height: 16px !important;
-  background: #ffffff !important;
-  border: 3px solid #333333 !important;
+/* RESET handle styling to default React Flow */
+.react-flow__handle, .react-flow__handle-left, .react-flow__handle-right {
+  width: 10px !important;
+  height: 10px !important;
+  background: #fff !important;
+  border: 2px solid #888 !important;
   border-radius: 50% !important;
+  position: absolute !important;
   pointer-events: all !important;
-  cursor: crosshair !important;
-  z-index: 999 !important;
+  z-index: 1 !important;
 }
-
+/* Remove custom offsets (left/right/top) */
 .react-flow__handle-left {
-  left: -10px !important;
+  left: -5px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
 }
-
 .react-flow__handle-right {
-  right: -10px !important;
+  right: -5px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
 }
-
 .react-flow__handle:hover {
   background: #4CAF50 !important;
   border-color: #2196F3 !important;
   transform: scale(1.2) !important;
 }
-
-.react-flow__handle.connectionindicator {
-  background: #4CAF50 !important;
-  border-color: #2196F3 !important;
-}
-
-.react-flow__handle.connectingfrom,
-.react-flow__handle.connectingto {
-  background: #FF6B6B !important;
-  border-color: #FF6B6B !important;
-}
-
 .react-flow__controls {
   background: rgba(24, 24, 29, 0.9);
   border: 1px solid rgb(51, 51, 64);
   border-radius: 8px;
 }
-
 [data-theme="light"] .react-flow__controls {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgb(229, 229, 229);
 }
-
 .react-flow__controls button {
   background: transparent;
   border: none;
   color: white;
   border-bottom: 1px solid rgb(51, 51, 64);
 }
-
 [data-theme="light"] .react-flow__controls button {
   color: black;
   border-bottom: 1px solid rgb(229, 229, 229);
 }
-
 .react-flow__controls button:hover {
   background: rgba(51, 51, 64, 0.5);
 }
-
 [data-theme="light"] .react-flow__controls button:hover {
   background: rgba(229, 229, 229, 0.5);
 }
