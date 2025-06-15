@@ -75,22 +75,12 @@ export const CustomNode = memo(({ id, data, type }: any) => {
 
   return (
     <div className={`react-flow__node-${type}`} title={hoverText}>
-      {/* Left handle - SIMPLIFIED */}
+      {/* Left handle: Use className for React Flow to recognize */}
       <Handle 
         type="target" 
         position={Position.Left}
-        isConnectable={true}
-        style={{ 
-          left: -10,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
-          background: '#ffffff',
-          border: '3px solid #333333',
-          borderRadius: '50%',
-          zIndex: 999
-        }}
+        id="left"
+        className="react-flow__handle react-flow__handle-left"
       />
       
       <div className="node-content">
@@ -107,25 +97,16 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         </button>
       </div>
       
-      {/* Right handle - SIMPLIFIED */}
+      {/* Right handle: Use className for React Flow to recognize */}
       <Handle 
         type="source" 
         position={Position.Right}
-        isConnectable={true}
-        style={{ 
-          right: -10,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 16,
-          height: 16,
-          background: '#ffffff',
-          border: '3px solid #333333',
-          borderRadius: '50%',
-          zIndex: 999
-        }}
+        id="right"
+        className="react-flow__handle react-flow__handle-right"
       />
     </div>
   );
 });
 
 CustomNode.displayName = 'CustomNode';
+
