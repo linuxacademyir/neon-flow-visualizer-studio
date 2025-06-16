@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -100,16 +99,12 @@
 
 /* Custom Workflow Nodes */
 .workflow-node {
-  @apply relative bg-black border-2 rounded-xl p-3 min-w-[120px] w-[120px] h-[80px] flex flex-col items-center justify-center text-center font-medium text-xs;
+  @apply relative bg-black border-2 rounded-xl p-2 min-w-[120px] w-[120px] h-[80px] flex flex-col items-center justify-center text-center font-medium text-xs;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .workflow-node {
   @apply bg-white text-black;
-}
-
-.workflow-node--trigger {
-  @apply border-green-400 text-green-400;
 }
 
 .workflow-node--action {
@@ -126,11 +121,21 @@
 
 /* Node Content */
 .workflow-node__content {
-  @apply flex flex-col items-center justify-center gap-1 h-full;
+  @apply flex flex-col items-center justify-center gap-1 h-full px-1;
 }
 
 .workflow-node__label {
-  @apply text-[10px] max-w-full overflow-hidden text-ellipsis whitespace-nowrap;
+  @apply text-[9px] max-w-full overflow-hidden text-ellipsis leading-tight;
+  word-wrap: break-word;
+  hyphens: auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.workflow-node--action .workflow-node__label {
+  @apply text-[8px] leading-[10px];
+  -webkit-line-clamp: 3;
 }
 
 /* Node Toolbar */

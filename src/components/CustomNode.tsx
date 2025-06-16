@@ -20,21 +20,12 @@ import {
 } from 'lucide-react';
 
 const iconMap = {
-  // Email specific triggers
-  'Email Opened': Mail,
-  'Link Clicked': MousePointer,
-  'CTA Clicked': MousePointer,
-  
-  // Standard triggers
-  'System based': Settings,
-  'User based': User,
-  'Participant based': Users,
-  'AI agent based': Bot,
-  
-  // Actions
+  // Email specific actions
   'Send Email': Mail,
   'Update Signature': Edit,
   'Track Click': MousePointer,
+  
+  // Standard actions
   'System based action': Settings,
   'User based action': User,
   'Participant based action': Users,
@@ -90,7 +81,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
       />
       
       <div className="workflow-node__content">
-        <IconComponent size={type === 'trigger' ? 14 : 16} />
+        <IconComponent size={type === 'action' ? 12 : 14} />
         <span className="workflow-node__label">{displayName}</span>
       </div>
       

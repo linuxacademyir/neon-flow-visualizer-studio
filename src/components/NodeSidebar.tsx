@@ -1,18 +1,13 @@
+
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Zap, Play, Diamond, FileText } from 'lucide-react';
+import { ChevronDown, ChevronRight, Play, Diamond, FileText } from 'lucide-react';
 
 const nodeCategories = {
-  triggers: {
-    color: '#00ff00',
-    shape: 'circle',
-    icon: Zap,
-    items: ['System based', 'User based', 'Participant based', 'AI agent based']
-  },
   actions: {
     color: '#00bfff',
     shape: 'rounded-rectangle',
     icon: Play,
-    items: ['System based action', 'User based action', 'Participant based action', 'AI agent based action']
+    items: ['Send Email', 'Update Signature', 'Track Click', 'System based action', 'User based action', 'Participant based action', 'AI agent based action']
   },
   controllers: {
     color: '#ff00ff',
@@ -30,7 +25,6 @@ const nodeCategories = {
 
 export const NodeSidebar = ({ setNodes }: any) => {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
-    triggers: true,
     actions: true,
     controllers: true,
     extras: true
@@ -44,7 +38,7 @@ export const NodeSidebar = ({ setNodes }: any) => {
     const id = `${type}-${Date.now()}`;
     const newNode = {
       id,
-      type: type === 'triggers' ? 'trigger' : type === 'actions' ? 'action' : type === 'controllers' ? 'controller' : 'extra',
+      type: type === 'actions' ? 'action' : type === 'controllers' ? 'controller' : 'extra',
       position: { x: Math.random() * 300 + 100, y: Math.random() * 300 + 100 },
       data: { 
         label,
