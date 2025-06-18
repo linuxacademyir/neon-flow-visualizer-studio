@@ -1,6 +1,5 @@
-
 import { useRef, useState, useEffect } from 'react';
-import { Download, Upload, FileDown, Sun, Moon } from 'lucide-react';
+import { Download, Upload, FileDown, Sun, Moon, Plus, RotateCcw } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import html2canvas from 'html2canvas';
 
@@ -15,6 +14,8 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
   const { fitView } = useReactFlow();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [theme, setTheme] = useState('dark');
+  const [selectedActor, setSelectedActor] = useState('External User');
+  const actorTypeOptions = ['External User', 'Internal User', 'AI Agent', 'System User'];
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -71,6 +72,11 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
     reader.onload = (e) => {
       try {
         const workflow = JSON.parse(e.target?.result as string);
+        const actionNodes = (workflow.nodes || []).filter((node: any) => node.type === 'action');
+        if (actionNodes.length > 1) {
+          alert('Only one action node is allowed in the workflow.');
+          return;
+        }
         setNodes(workflow.nodes || []);
         setEdges(workflow.edges || []);
       } catch (error) {
@@ -100,6 +106,32 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
     }
   };
 
+  const addActionNode = () => {
+    if (nodes.some((node) => node.type === 'action')) return;
+    const id = `action-${Date.now()}`;
+    const newNode = {
+      id,
+      type: 'action',
+      position: { x: 300, y: 200 },
+      data: {
+        label: 'Action',
+        name: 'Action',
+        actor: selectedActor,
+        description: '',
+        onDelete: (nodeId: string) => setNodes((nds: any) => nds.filter((node: any) => node.id !== nodeId)),
+        onEdit: (nodeId: string) => {},
+      },
+    };
+    setNodes((nds: any) => [...nds, newNode]);
+  };
+
+  const resetBoard = () => {
+    setNodes([]);
+    setEdges([]);
+    localStorage.removeItem('workflow_nodes');
+    localStorage.removeItem('workflow_edges');
+  };
+
   return (
     <nav className="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-6">
       <div className="flex items-center space-x-4">
@@ -115,13 +147,19 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
 
       <div className="flex items-center space-x-2">
         <button
+          onClick={resetBoard}
+          className="p-2 hover:bg-gray-700 text-yellow-400 hover:text-white rounded-lg transition-all duration-200"
+          title="Reset board"
+        >
+          <RotateCcw size={18} />
+        </button>
+        <button
           onClick={exportWorkflow}
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
           title="Export workflow as JSON"
         >
           <Upload size={18} />
         </button>
-
         <button
           onClick={() => fileInputRef.current?.click()}
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
@@ -129,7 +167,6 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
         >
           <Download size={18} />
         </button>
-
         <button
           onClick={downloadAsPNG}
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"

@@ -112,11 +112,32 @@
 }
 
 .workflow-node--controller {
-  @apply border-purple-400 text-purple-400;
+  border-color: #39FF14;
+  color: #39FF14;
+  width: 80px !important;
+  min-width: 80px !important;
+  height: 80px !important;
+  border-radius: 0.75rem;
 }
 
 .workflow-node--extra {
   @apply border-yellow-400 text-yellow-400 h-[50px] rounded-md;
+}
+
+.workflow-node--event {
+  @apply bg-black;
+  border-color: #D726FF;
+  color: #D726FF;
+  border-width: 2px;
+  min-width: 140px;
+  width: 140px;
+  height: 60px;
+}
+
+[data-theme="light"] .workflow-node--event {
+  @apply bg-black;
+  border-color: #D726FF;
+  color: #D726FF;
 }
 
 /* Node Content */
@@ -134,8 +155,9 @@
 }
 
 .workflow-node--action .workflow-node__label {
-  @apply text-[8px] leading-[10px];
-  -webkit-line-clamp: 3;
+  font-size: 9px;
+  line-height: 1.1;
+  -webkit-line-clamp: 2;
 }
 
 /* Node Toolbar */
@@ -165,7 +187,7 @@
 
 /* Connection Handles - CRITICAL FOR PROPER CONNECTIONS */
 .workflow-handle {
-  @apply absolute w-4 h-4 bg-white border-2 border-green-500 rounded-full cursor-crosshair;
+  @apply absolute w-3 h-3 bg-white border-2 border-green-500 rounded-full cursor-crosshair;
   /* Ensure handles are always interactive and visible */
   pointer-events: all !important;
   z-index: 10 !important;
@@ -205,4 +227,14 @@
 
 [data-theme="light"] .workflow-controls {
   @apply bg-white border-gray-300;
+}
+
+.workflow-node--comment-bubble {
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  z-index: 1;
+  padding: 0 !important;
+  min-width: 120px;
+  min-height: 50px;
 }

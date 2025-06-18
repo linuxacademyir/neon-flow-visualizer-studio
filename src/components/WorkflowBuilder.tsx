@@ -1,5 +1,4 @@
-
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import {
   ReactFlow,
   addEdge,
@@ -24,41 +23,11 @@ const nodeTypes = {
   action: CustomNode,
   controller: CustomNode,
   extra: CustomNode,
+  event: CustomNode,
 };
 
 // Email signature workflow initial setup
-const initialNodes: Node[] = [
-  {
-    id: 'email-trigger',
-    type: 'trigger',
-    position: { x: 100, y: 100 },
-    data: {
-      label: 'Email Opened',
-      description: 'Triggered when email is opened by recipient',
-      name: 'Email Open Trigger'
-    }
-  },
-  {
-    id: 'cta-action',
-    type: 'action',
-    position: { x: 400, y: 100 },
-    data: {
-      label: 'Track Click',
-      description: 'Track CTA button clicks in email signature',
-      name: 'CTA Tracking'
-    }
-  },
-  {
-    id: 'update-signature',
-    type: 'action',
-    position: { x: 700, y: 100 },
-    data: {
-      label: 'Update Signature',
-      description: 'Update email signature with personalized CTA',
-      name: 'Dynamic Signature'
-    }
-  }
-];
+const initialNodes: Node[] = [];
 
 const initialEdges: Edge[] = [
   {
@@ -81,6 +50,25 @@ export const WorkflowBuilder = () => {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [editSidebarOpen, setEditSidebarOpen] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedNodes = localStorage.getItem('workflow_nodes');
+    const savedEdges = localStorage.getItem('workflow_edges');
+    if (savedNodes && savedEdges) {
+      try {
+        setNodes(JSON.parse(savedNodes));
+        setEdges(JSON.parse(savedEdges));
+      } catch {}
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  // Save to localStorage on nodes/edges change
+  useEffect(() => {
+    localStorage.setItem('workflow_nodes', JSON.stringify(nodes));
+    localStorage.setItem('workflow_edges', JSON.stringify(edges));
+  }, [nodes, edges]);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -140,7 +128,7 @@ export const WorkflowBuilder = () => {
         <Navbar nodes={nodes} edges={edges} setNodes={setNodes} setEdges={setEdges} />
         
         <div className="workflow-builder__content">
-          <NodeSidebar setNodes={setNodes} />
+          <NodeSidebar setNodes={setNodes} setEdges={setEdges} />
           
           <div className="workflow-builder__canvas" ref={reactFlowWrapper}>
             <ReactFlow

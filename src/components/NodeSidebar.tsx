@@ -1,13 +1,12 @@
-
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Play, Diamond, FileText } from 'lucide-react';
+import { ChevronDown, ChevronRight, Play, Diamond, FileText, CircleCheckBig, CircleAlert, Ban } from 'lucide-react';
 
 const nodeCategories = {
-  actions: {
+  main: {
     color: '#00bfff',
     shape: 'rounded-rectangle',
     icon: Play,
-    items: ['Send Email', 'Update Signature', 'Track Click', 'System based action', 'User based action', 'Participant based action', 'AI agent based action']
+    items: ['Action + Event', 'Action', 'Event']
   },
   controllers: {
     color: '#ff00ff',
@@ -23,11 +22,18 @@ const nodeCategories = {
   }
 };
 
-export const NodeSidebar = ({ setNodes }: any) => {
+const eventTypeOptions = [
+  { label: 'Triggable', value: 'triggable', icon: CircleCheckBig },
+  { label: 'Conditionally Triggable', value: 'conditionally_triggable', icon: CircleAlert },
+  { label: 'Non Triggable', value: 'non_triggable', icon: Ban },
+];
+const EVENT_COLOR = '#FFF700'; // Electric Yellow
+
+export const NodeSidebar = ({ setNodes, setEdges }: any) => {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
-    actions: true,
-    controllers: true,
-    extras: true
+    main: false,
+    controllers: false,
+    extras: false
   });
 
   const toggleCategory = (category: string) => {
@@ -35,10 +41,86 @@ export const NodeSidebar = ({ setNodes }: any) => {
   };
 
   const addNode = (type: string, label: string) => {
+    if (type === 'main' && label === 'Action + Event') {
+      const actionId = `${type}-${Date.now()}`;
+      const eventId = `event-${Date.now()}`;
+      const actionNode = {
+        id: actionId,
+        type: 'action',
+        position: { x: Math.random() * 300 + 100, y: Math.random() * 300 + 100 },
+        data: {
+          label: 'Action',
+          name: 'Action',
+          actor: '',
+          description: '',
+          notes: undefined,
+          onDelete: (nodeId: string) => {
+            setNodes((nds: any) => nds.filter((node: any) => node.id !== nodeId && node.id !== eventId));
+          },
+          onEdit: (nodeId: string) => {},
+        },
+      };
+      const eventNode = {
+        id: eventId,
+        type: 'event',
+        position: { x: actionNode.position.x + 180, y: actionNode.position.y },
+        data: {
+          label: 'Event',
+          name: 'Event',
+          onDelete: (nodeId: string) => {
+            setNodes((nds: any) => nds.filter((node: any) => node.id !== nodeId));
+          },
+          onEdit: (nodeId: string) => {},
+        },
+      };
+      setNodes((nds: any) => [...nds, actionNode, eventNode]);
+      // Add edge connecting action to event
+      setEdges((eds: any) => [...eds, { id: `e-${actionId}-${eventId}`, source: actionId, target: eventId, type: 'default' }]);
+      return;
+    }
+    if (type === 'main' && label === 'Action') {
+      const actionId = `${type}-${Date.now()}`;
+      const actionNode = {
+        id: actionId,
+        type: 'action',
+        position: { x: Math.random() * 300 + 100, y: Math.random() * 300 + 100 },
+        data: {
+          label: 'Action',
+          name: 'Action',
+          actor: '',
+          description: '',
+          notes: undefined,
+          onDelete: (nodeId: string) => {
+            setNodes((nds: any) => nds.filter((node: any) => node.id !== nodeId));
+          },
+          onEdit: (nodeId: string) => {},
+        },
+      };
+      setNodes((nds: any) => [...nds, actionNode]);
+      return;
+    }
+    if (type === 'main' && label === 'Event') {
+      const eventId = `event-${Date.now()}`;
+      const eventNode = {
+        id: eventId,
+        type: 'event',
+        position: { x: Math.random() * 300 + 100, y: Math.random() * 300 + 100 },
+        data: {
+          label: 'Event',
+          name: 'Event',
+          onDelete: (nodeId: string) => {
+            setNodes((nds: any) => nds.filter((node: any) => node.id !== nodeId));
+          },
+          onEdit: (nodeId: string) => {},
+        },
+      };
+      setNodes((nds: any) => [...nds, eventNode]);
+      return;
+    }
     const id = `${type}-${Date.now()}`;
     const newNode = {
       id,
-      type: type === 'actions' ? 'action' : type === 'controllers' ? 'controller' : 'extra',
+      type: type === 'main' ? 'action' : type === 'controllers' ? 'controller' : 'extra',
       position: { x: Math.random() * 300 + 100, y: Math.random() * 300 + 100 },
       data: { 
         label,
@@ -54,7 +136,6 @@ export const NodeSidebar = ({ setNodes }: any) => {
         }
       },
     };
-    
     setNodes((nds: any) => [...nds, newNode]);
   };
 
@@ -82,7 +163,16 @@ export const NodeSidebar = ({ setNodes }: any) => {
                     key={item}
                     onClick={() => addNode(category, item)}
                     className="block w-full text-left text-xs text-gray-400 hover:text-white hover:bg-gray-700 p-2 rounded transition-colors"
-                    style={{ borderLeft: `3px solid ${config.color}` }}
+                    style={{
+                      borderLeft: item === 'Event'
+                        ? '3px solid #D726FF'
+                        : item === 'Action + Event'
+                          ? '3px solid transparent'
+                          : `3px solid ${config.color}`,
+                      ...(item === 'Action + Event' && {
+                        borderImage: 'linear-gradient(to bottom, #00bfff 50%, #D726FF 50%) 1',
+                      })
+                    }}
                   >
                     {item}
                   </button>
