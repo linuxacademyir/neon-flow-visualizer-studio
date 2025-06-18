@@ -99,7 +99,8 @@
 
 /* Custom Workflow Nodes */
 .workflow-node {
-  @apply relative bg-black border-2 rounded-xl p-2 min-w-[120px] w-[120px] h-[80px] flex flex-col items-center justify-center text-center font-medium text-xs;
+  @apply relative bg-black border-2 p-2 min-w-[120px] w-[120px] h-[80px] flex flex-col items-center justify-center text-center font-medium text-xs;
+  border-radius: 10px !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
@@ -109,6 +110,7 @@
 
 .workflow-node--action {
   @apply border-cyan-400 text-cyan-400;
+  border-radius: 10px !important;
 }
 
 .workflow-node--controller {
@@ -117,11 +119,12 @@
   width: 80px !important;
   min-width: 80px !important;
   height: 80px !important;
-  border-radius: 0.75rem;
+  border-radius: 10px !important;
 }
 
 .workflow-node--extra {
-  @apply border-yellow-400 text-yellow-400 h-[50px] rounded-md;
+  @apply border-yellow-400 text-yellow-400 h-[50px];
+  border-radius: 10px !important;
 }
 
 .workflow-node--event {
@@ -132,6 +135,7 @@
   min-width: 140px;
   width: 140px;
   height: 60px;
+  border-radius: 10px !important;
 }
 
 [data-theme="light"] .workflow-node--event {

@@ -74,6 +74,15 @@ export const WorkflowBuilder = () => {
     // eslint-disable-next-line
   }, []);
 
+  // Ensure default zoom is 100% on mount/refresh
+  useEffect(() => {
+    if (reactFlowInstance && reactFlowInstance.setViewport) {
+      reactFlowInstance.setViewport({ x: 0, y: 0, zoom: 1 });
+    }
+    // Only run on mount
+    // eslint-disable-next-line
+  }, [reactFlowInstance]);
+
   // Save to localStorage on nodes/edges/name change
   useEffect(() => {
     localStorage.setItem('workflow_nodes', JSON.stringify(nodes));
