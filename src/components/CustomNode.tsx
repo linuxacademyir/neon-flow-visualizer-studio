@@ -19,6 +19,7 @@ import {
   CircleCheckBig,
   CircleAlert,
   Ban,
+  ListChecks,
 } from 'lucide-react';
 
 // Add SVG React components for actor icons
@@ -592,6 +593,51 @@ export const CustomNode = memo(({ id, data, type }: any) => {
             />
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (type === 'form') {
+    // Dynamic height calculation
+    const baseHeight = 60; // px
+    const perQuestionHeight = 22; // px per question
+    const questionsCount = Array.isArray(data.questions) ? data.questions.length : 0;
+    const dynamicHeight = baseHeight + (questionsCount > 0 ? questionsCount * perQuestionHeight : 0);
+    return (
+      <div
+        className="workflow-node workflow-node--form"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{ position: 'relative', minWidth: 180, minHeight: baseHeight, height: dynamicHeight, background: '#111', border: '2px solid #FF073A', boxShadow: '0 0 8px 2px #FF073A88' }}
+      >
+        <Handle
+          type="target"
+          position={Position.Left}
+          className="workflow-handle workflow-handle--target"
+        />
+        <div className="workflow-node__content flex flex-col items-center gap-1">
+          <ListChecks size={18} />
+          <span className="workflow-node__label font-semibold text-base mt-1">{data.name || 'Form'}</span>
+          <div className="text-xs text-gray-400 mt-1 w-full">
+            {Array.isArray(data.questions) && data.questions.length > 0 ? (
+              <ul className="list-disc pl-4">
+                {data.questions.map((q: any, idx: number) => (
+                  <li key={idx} className="truncate">
+                    {q.question ? q.question : 'Untitled'}
+                    <span className="ml-2 text-gray-500">[{q.fieldType}]</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span>No questions</span>
+            )}
+          </div>
+        </div>
+        <Handle
+          type="source"
+          position={Position.Right}
+          className="workflow-handle workflow-handle--source"
+        />
       </div>
     );
   }

@@ -127,6 +127,63 @@ export const EditSidebar = ({
   
   const isCommentNode = selectedNode && selectedNode.data.label === 'Comment';
   const isEventNode = selectedNode?.type === 'event';
+  const isFormNode = selectedNode?.type === 'form';
+
+  // Helper for updating questions array
+  const handleQuestionChange = (idx: number, updates: any) => {
+    if (!selectedNode) return;
+    const questions = [...(selectedNode.data.questions || [])];
+    questions[idx] = { ...questions[idx], ...updates };
+    onUpdateNode(selectedNode.id, { questions });
+  };
+  const handleAddQuestion = () => {
+    if (!selectedNode) return;
+    const questions = [...(selectedNode.data.questions || [])];
+    questions.push({ question: '', fieldType: 'text', options: [] });
+    onUpdateNode(selectedNode.id, { questions });
+  };
+  const handleRemoveQuestion = (idx: number) => {
+    if (!selectedNode) return;
+    const questions = [...(selectedNode.data.questions || [])];
+    questions.splice(idx, 1);
+    onUpdateNode(selectedNode.id, { questions });
+  };
+  const handleOptionChange = (qIdx: number, optIdx: number, value: string) => {
+    if (!selectedNode) return;
+    const questions = [...(selectedNode.data.questions || [])];
+    const options = [...(questions[qIdx].options || [])];
+    options[optIdx] = value;
+    questions[qIdx].options = options;
+    onUpdateNode(selectedNode.id, { questions });
+  };
+  const handleAddOption = (qIdx: number) => {
+    if (!selectedNode) return;
+    const questions = [...(selectedNode.data.questions || [])];
+    const options = [...(questions[qIdx].options || [])];
+    options.push('');
+    questions[qIdx].options = options;
+    onUpdateNode(selectedNode.id, { questions });
+  };
+  const handleRemoveOption = (qIdx: number, optIdx: number) => {
+    if (!selectedNode) return;
+    const questions = [...(selectedNode.data.questions || [])];
+    const options = [...(questions[qIdx].options || [])];
+    options.splice(optIdx, 1);
+    questions[qIdx].options = options;
+    onUpdateNode(selectedNode.id, { questions });
+  };
+
+  const fieldTypes = [
+    { value: 'text', label: 'Text' },
+    { value: 'textarea', label: 'Textarea' },
+    { value: 'dropdown', label: 'Dropdown' },
+    { value: 'radio', label: 'Radio' },
+    { value: 'checkbox', label: 'Checkbox' },
+    { value: 'date', label: 'Date' },
+    { value: 'number', label: 'Number' },
+    { value: 'file', label: 'File' },
+    { value: 'boolean', label: 'Boolean' },
+  ];
 
   return (
     <div className="w-80 bg-gray-800 border-l border-gray-700 p-4 overflow-y-auto">
@@ -260,6 +317,82 @@ export const EditSidebar = ({
                 />
               </div>
             </>
+          )}
+          {isFormNode && (
+            <div className="space-y-4">
+              <h3 className="text-md font-semibold text-white mb-2">Form Questions</h3>
+              {(selectedNode.data.questions || []).map((q: any, idx: number) => (
+                <div key={idx} className="border border-gray-700 rounded p-2 mb-2 bg-gray-900">
+                  <div className="flex items-center gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={q.question}
+                      onChange={e => handleQuestionChange(idx, { question: e.target.value })}
+                      className="flex-1 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder={`Question #${idx + 1}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveQuestion(idx)}
+                      className="text-red-400 hover:text-red-600 px-2"
+                      title="Remove question"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <label className="text-xs text-gray-400">Field Type:</label>
+                    <select
+                      value={q.fieldType}
+                      onChange={e => handleQuestionChange(idx, { fieldType: e.target.value, options: (['dropdown','radio','checkbox'].includes(e.target.value) ? (q.options || ['']) : []) })}
+                      className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {fieldTypes.map(ft => (
+                        <option key={ft.value} value={ft.value}>{ft.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {['dropdown','radio','checkbox'].includes(q.fieldType) && (
+                    <div className="mb-2">
+                      <label className="text-xs text-gray-400">Options:</label>
+                      {(q.options || []).map((opt: string, optIdx: number) => (
+                        <div key={optIdx} className="flex items-center gap-2 mb-1">
+                          <input
+                            type="text"
+                            value={opt}
+                            onChange={e => handleOptionChange(idx, optIdx, e.target.value)}
+                            className="flex-1 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder={`Option #${optIdx + 1}`}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveOption(idx, optIdx)}
+                            className="text-red-400 hover:text-red-600 px-2"
+                            title="Remove option"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => handleAddOption(idx)}
+                        className="text-xs text-blue-400 hover:text-blue-600 mt-1"
+                      >
+                        + Add Option
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={handleAddQuestion}
+                className="w-full bg-blue-700 hover:bg-blue-800 text-white text-sm rounded px-3 py-2 mt-2"
+              >
+                + Add Question
+              </button>
+            </div>
           )}
           {/* Router branch count input and settings */}
           {selectedNode?.type === 'controller' && (selectedNode?.data?.label === 'Router' || selectedType === 'Router') && (

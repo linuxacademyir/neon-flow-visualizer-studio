@@ -8,9 +8,11 @@ interface NavbarProps {
   edges: any[];
   setNodes: (nodes: any) => void;
   setEdges: (edges: any) => void;
+  workflowName: string;
+  setWorkflowName: (name: string) => void;
 }
 
-export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
+export const Navbar = ({ nodes, edges, setNodes, setEdges, workflowName, setWorkflowName }: NavbarProps) => {
   const { fitView } = useReactFlow();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [theme, setTheme] = useState('dark');
@@ -32,16 +34,12 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
 
   const exportWorkflow = () => {
     const workflow = {
+      name: workflowName,
       nodes: nodes.map(node => ({
         id: node.id,
         type: node.type,
         position: node.position,
-        data: {
-          label: node.data.label,
-          name: node.data.name,
-          actor: node.data.actor,
-          description: node.data.description
-        }
+        data: { ...node.data }
       })),
       edges: edges.map(edge => ({
         id: edge.id,
@@ -57,7 +55,10 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'workflow.json';
+    const safeName = (workflowName && workflowName.trim().length > 0 ? workflowName : 'workflow')
+      .replace(/[^a-zA-Z0-9-_ ]/g, '')
+      .replace(/\s+/g, '-');
+    a.download = `${safeName}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -72,13 +73,11 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
     reader.onload = (e) => {
       try {
         const workflow = JSON.parse(e.target?.result as string);
-        const actionNodes = (workflow.nodes || []).filter((node: any) => node.type === 'action');
-        if (actionNodes.length > 1) {
-          alert('Only one action node is allowed in the workflow.');
-          return;
-        }
         setNodes(workflow.nodes || []);
         setEdges(workflow.edges || []);
+        if (workflow.name) {
+          setWorkflowName(workflow.name);
+        }
       } catch (error) {
         console.error('Failed to import workflow:', error);
         alert('Failed to import workflow. Please check the file format.');
@@ -143,6 +142,14 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
         <h1 className="text-xl font-bold text-white">Workflow Builder</h1>
+        <input
+          type="text"
+          value={workflowName}
+          onChange={e => setWorkflowName(e.target.value)}
+          className="ml-4 px-2 py-1 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm w-56"
+          placeholder="Workflow name..."
+          title="Workflow Name"
+        />
       </div>
 
       <div className="flex items-center space-x-2">
@@ -158,14 +165,14 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges }: NavbarProps) => {
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
           title="Export workflow as JSON"
         >
-          <Upload size={18} />
+          <Download size={18} />
         </button>
         <button
           onClick={() => fileInputRef.current?.click()}
           className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
           title="Import workflow from JSON"
         >
-          <Download size={18} />
+          <Upload size={18} />
         </button>
         <button
           onClick={downloadAsPNG}
