@@ -133,12 +133,116 @@ export const WorkflowBuilder = () => {
     }
   }, [setNodes, selectedNode]);
 
+  // Add next node logic for + button on node
+  const handleAddNextNode = useCallback((sourceNodeId, { type, label }) => {
+    const sourceNode = nodes.find(n => n.id === sourceNodeId);
+    if (!sourceNode) return;
+
+    // Position new node to the right of the source node
+    const defaultX = sourceNode.position.x + 220;
+    const defaultY = sourceNode.position.y;
+    // Find a non-overlapping Y position (simple vertical offset if needed)
+    let x = defaultX;
+    let y = defaultY;
+    let tries = 0;
+    while (nodes.some(n => Math.abs(n.position.x - x) < 180 && Math.abs(n.position.y - y) < 80)) {
+      y += 60;
+      tries++;
+      if (tries > 10) break;
+    }
+    const position = { x, y };
+    const id = `${type}-${label.replace(/\s+/g, '-')}-${Date.now()}`;
+    let newNode;
+    if (type === 'action') {
+      newNode = {
+        id,
+        type: 'action',
+        position,
+        data: {
+          label: 'Action',
+          name: 'Action',
+          actor: '',
+          description: '',
+          notes: undefined,
+        },
+      };
+    } else if (type === 'event') {
+      newNode = {
+        id,
+        type: 'event',
+        position,
+        data: {
+          label: 'Event',
+          name: 'Event',
+        },
+      };
+    } else if (type === 'form') {
+      newNode = {
+        id,
+        type: 'form',
+        position,
+        data: {
+          label: 'Form',
+          name: 'Form',
+          questions: [
+            {
+              question: '',
+              fieldType: 'input',
+              options: [],
+            },
+          ],
+        },
+      };
+    } else if (type === 'controller') {
+      newNode = {
+        id,
+        type: 'controller',
+        position,
+        data: {
+          label,
+          name: label,
+        },
+      };
+    } else if (type === 'extra') {
+      newNode = {
+        id,
+        type: 'extra',
+        position,
+        data: {
+          label,
+          name: label,
+          notes: label === 'Comment' ? '' : undefined,
+        },
+      };
+    } else {
+      // fallback
+      newNode = {
+        id,
+        type,
+        position,
+        data: {
+          label,
+          name: label,
+        },
+      };
+    }
+    setNodes(nds => [
+      ...nds,
+      newNode,
+    ]);
+    setEdges(eds => [
+      ...eds,
+      { id: `e-${sourceNodeId}-${id}`, source: sourceNodeId, target: id, type: 'default' },
+    ]);
+  }, [nodes, setNodes, setEdges]);
+
   const enhancedNodes = nodes.map(node => ({
     ...node,
     data: {
       ...node.data,
       onEdit: editNode,
       onDelete: deleteNode,
+      onAddNextNode: handleAddNextNode,
     }
   }));
 

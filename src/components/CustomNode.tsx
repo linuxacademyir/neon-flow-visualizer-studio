@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import { Handle, Position, useUpdateNodeInternals } from '@xyflow/react';
 import { 
   Edit, 
@@ -20,7 +20,9 @@ import {
   CircleAlert,
   Ban,
   ListChecks,
+  Plus,
 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 // Add SVG React components for actor icons
 const ExternalUserIcon = () => (
@@ -97,6 +99,7 @@ const EVENT_COLOR = '#FFF700';
 
 export const CustomNode = memo(({ id, data, type }: any) => {
   const [hovered, setHovered] = useState(false);
+  const [plusHovered, setPlusHovered] = useState(false);
   const updateNodeInternals = useUpdateNodeInternals();
 
   const handleEdit = (e: React.MouseEvent) => {
@@ -159,6 +162,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
           position={Position.Right} 
           className="workflow-handle workflow-handle--source"
         />
+        {typeof data.onAddNextNode === 'function' && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginLeft: 24,
+              zIndex: 10,
+              minWidth: 32,
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+          >
+            {(hovered || plusHovered) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                    title="Add next node"
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        )}
         {showTooltip && (
           <div
             style={{
@@ -255,6 +305,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
             isConnectable={true}
           />
         ))}
+        {typeof data.onAddNextNode === 'function' && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginLeft: 24,
+              zIndex: 10,
+              minWidth: 32,
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+          >
+            {(hovered || plusHovered) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                    title="Add next node"
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        )}
         {showTooltip && (
           <div
             style={{
@@ -337,6 +434,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
             style={{ position: 'absolute', left: '50%', bottom: 0, transform: 'translateX(-50%)' }}
           />
         )}
+        {typeof data.onAddNextNode === 'function' && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginLeft: 24,
+              zIndex: 10,
+              minWidth: 32,
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+          >
+            {(hovered || plusHovered) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                    title="Add next node"
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        )}
         {showTooltip && (
           <div
             style={{
@@ -414,6 +558,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
           position={Position.Right}
           className="workflow-handle workflow-handle--source"
         />
+        {typeof data.onAddNextNode === 'function' && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginLeft: 24,
+              zIndex: 10,
+              minWidth: 32,
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+          >
+            {(hovered || plusHovered) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                    title="Add next node"
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        )}
         {showTooltip && (
           <div
             style={{
@@ -481,6 +672,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
           position={Position.Right}
           className="workflow-handle workflow-handle--source"
         />
+        {typeof data.onAddNextNode === 'function' && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginLeft: 24,
+              zIndex: 10,
+              minWidth: 32,
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+          >
+            {(hovered || plusHovered) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                    title="Add next node"
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        )}
         {showTooltip && (
           <div
             style={{
@@ -555,6 +793,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
             {textLines.join('\n')}
           </span>
         </div>
+        {typeof data.onAddNextNode === 'function' && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginLeft: 24,
+              zIndex: 10,
+              minWidth: 32,
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+          >
+            {(hovered || plusHovered) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                    title="Add next node"
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        )}
         {showTooltip && (
           <div
             style={{
@@ -603,13 +888,50 @@ export const CustomNode = memo(({ id, data, type }: any) => {
     const perQuestionHeight = 22; // px per question
     const questionsCount = Array.isArray(data.questions) ? data.questions.length : 0;
     const dynamicHeight = baseHeight + (questionsCount > 0 ? questionsCount * perQuestionHeight : 0);
+
+    // --- Dynamic width calculation ---
+    // Find the longest text among form name and questions (including field type)
+    const formName = data.name || 'Form';
+    const questionTexts = Array.isArray(data.questions)
+      ? data.questions.map((q: any) => `${q.question ? q.question : 'Untitled'} [${q.fieldType}]`)
+      : [];
+    const allTexts = [formName, ...questionTexts];
+    const longestText = allTexts.reduce((a, b) => (a.length > b.length ? a : b), '');
+
+    // Use a ref to measure text width
+    const textMeasureRef = useRef<HTMLSpanElement>(null);
+    const [dynamicWidth, setDynamicWidth] = useState<number>(180);
+
+    useEffect(() => {
+      if (textMeasureRef.current) {
+        // Add padding for icon, margins, and some buffer (e.g., 64px)
+        setDynamicWidth(Math.max(180, textMeasureRef.current.offsetWidth + 64));
+      }
+    }, [longestText, questionsCount]);
+
     return (
       <div
         className="workflow-node workflow-node--form"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        style={{ position: 'relative', minWidth: 180, minHeight: baseHeight, height: dynamicHeight, background: '#111', border: '2px solid #FF073A', boxShadow: '0 0 8px 2px #FF073A88' }}
+        style={{ position: 'relative', minWidth: 180, width: dynamicWidth, minHeight: baseHeight, height: dynamicHeight, background: '#111', border: '2px solid #FF073A', boxShadow: '0 0 8px 2px #FF073A88' }}
       >
+        {/* Hidden span for measuring text width */}
+        <span
+          ref={textMeasureRef}
+          style={{
+            position: 'absolute',
+            visibility: 'hidden',
+            whiteSpace: 'nowrap',
+            fontWeight: 600,
+            fontSize: '1rem',
+            pointerEvents: 'none',
+            zIndex: -1,
+            padding: '0 16px',
+          }}
+        >
+          {longestText}
+        </span>
         <Handle
           type="target"
           position={Position.Left}
@@ -622,7 +944,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
             {Array.isArray(data.questions) && data.questions.length > 0 ? (
               <ul className="list-disc pl-4">
                 {data.questions.map((q: any, idx: number) => (
-                  <li key={idx} className="truncate">
+                  <li key={idx}>
                     {q.question ? q.question : 'Untitled'}
                     <span className="ml-2 text-gray-500">[{q.fieldType}]</span>
                   </li>
@@ -638,6 +960,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
           position={Position.Right}
           className="workflow-handle workflow-handle--source"
         />
+        {typeof data.onAddNextNode === 'function' && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginLeft: 24,
+              zIndex: 10,
+              minWidth: 32,
+              minHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+          >
+            {(hovered || plusHovered) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                    title="Add next node"
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        )}
       </div>
     );
   }
@@ -665,6 +1034,53 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         position={Position.Right} 
         className="workflow-handle workflow-handle--source"
       />
+      {typeof data.onAddNextNode === 'function' && (
+        <div
+          style={{
+            position: 'absolute',
+            left: '100%',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            marginLeft: 24,
+            zIndex: 10,
+            minWidth: 32,
+            minHeight: 32,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onMouseEnter={() => setPlusHovered(true)}
+          onMouseLeave={() => setPlusHovered(false)}
+        >
+          {(hovered || plusHovered) && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-1 rounded-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 shadow transition-opacity duration-150"
+                  title="Add next node"
+                  onClick={e => e.stopPropagation()}
+                  tabIndex={0}
+                  style={{ opacity: (hovered || plusHovered) ? 1 : 0 }}
+                >
+                  <Plus size={16} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Escalation' })}>Escalation</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Iterator' })}>Iterator</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Aggregator' })}>Aggregator</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'extra', label: 'Comment' })}>Comment</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      )}
       {showTooltip && (
         <div
           style={{
