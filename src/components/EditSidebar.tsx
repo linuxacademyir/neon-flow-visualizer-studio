@@ -21,9 +21,9 @@ const nodeTypeOptions = {
 const actorTypeOptions = ['External User', 'Internal User', 'AI Agent', 'System User'];
 
 const eventTypeOptions = [
-  { label: 'Triggable', value: 'triggable', icon: CircleCheckBig },
-  { label: 'Conditionally Triggable', value: 'conditionally_triggable', icon: CircleAlert },
-  { label: 'Non Triggable', value: 'non_triggable', icon: Ban },
+  { label: 'Trigger', value: 'triggable', icon: CircleCheckBig },
+  { label: 'Conditionally Trigger', value: 'conditionally_triggable', icon: CircleAlert },
+  { label: 'Not Trigger', value: 'non_triggable', icon: Ban },
 ];
 
 // Add SVG React components for actor icons (copied from CustomNode.tsx)

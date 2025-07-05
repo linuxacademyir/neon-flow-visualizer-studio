@@ -24,9 +24,9 @@ const nodeCategories = {
 };
 
 const eventTypeOptions = [
-  { label: 'Triggable', value: 'triggable', icon: CircleCheckBig },
-  { label: 'Conditionally Triggable', value: 'conditionally_triggable', icon: CircleAlert },
-  { label: 'Non Triggable', value: 'non_triggable', icon: Ban },
+  { label: 'Trigger', value: 'triggable', icon: CircleCheckBig },
+  { label: 'Conditionally Trigger', value: 'conditionally_triggable', icon: CircleAlert },
+  { label: 'Not Trigger', value: 'non_triggable', icon: Ban },
 ];
 const EVENT_COLOR = '#FFF700'; // Electric Yellow
 
