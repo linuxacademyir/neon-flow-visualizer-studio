@@ -45,7 +45,9 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges, workflowName, setWork
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        type: edge.type
+        type: edge.type,
+        sourceHandle: edge.sourceHandle,
+        targetHandle: edge.targetHandle
       }))
     };
 
@@ -74,7 +76,16 @@ export const Navbar = ({ nodes, edges, setNodes, setEdges, workflowName, setWork
       try {
         const workflow = JSON.parse(e.target?.result as string);
         setNodes(workflow.nodes || []);
-        setEdges(workflow.edges || []);
+        // Ensure edges preserve handle information for router connections
+        const importedEdges = (workflow.edges || []).map((edge: any) => ({
+          id: edge.id,
+          source: edge.source,
+          target: edge.target,
+          type: edge.type || 'default',
+          sourceHandle: edge.sourceHandle,
+          targetHandle: edge.targetHandle
+        }));
+        setEdges(importedEdges);
         if (workflow.name) {
           setWorkflowName(workflow.name);
         }
