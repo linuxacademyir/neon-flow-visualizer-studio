@@ -456,6 +456,7 @@ export const EditSidebar = ({
                       <option value="Random">Random — pick N randomly</option>
                       <option value="First">First — pick the first N</option>
                       <option value="Priority">Priority — pick the top N by priority</option>
+                      <option value="Conditional">Conditional — pick branches that meet condition</option>
                     </select>
                   </div>
                 </>
