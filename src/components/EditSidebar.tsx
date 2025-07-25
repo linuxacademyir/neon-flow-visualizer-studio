@@ -956,15 +956,21 @@ const BranchConfigSidebar: React.FC<BranchConfigSidebarProps> = ({ branchCount, 
   // Ensure configs array is always up to date with branchCount
   React.useEffect(() => {
     if (branchConfigs.length !== branchCount) {
-      const newConfigs = Array.from({ length: branchCount }, (_, i) =>
-        branchConfigs[i] || {
+      const newConfigs = Array.from({ length: branchCount }, (_, i) => {
+        // Use existing config if available, otherwise create a new isolated one
+        if (branchConfigs[i]) {
+          return { ...branchConfigs[i] };
+        }
+        // Create a completely new configuration object for each branch
+        return {
           branch: i + 1,
           name: '',
           description: '',
           priority: 1,
           conditions: [{ type: 'always' }] as import('./BranchConfigPanel').BranchCondition[],
-        }
-      );
+          operators: [] as ('AND' | 'OR')[],
+        };
+      });
       onUpdateConfigs(newConfigs);
     }
     // eslint-disable-next-line
@@ -972,7 +978,12 @@ const BranchConfigSidebar: React.FC<BranchConfigSidebarProps> = ({ branchCount, 
 
   const handleBranchChange = (cfg: BranchConfig) => {
     const newConfigs = [...branchConfigs];
-    newConfigs[cfg.branch - 1] = cfg;
+    // Create a deep copy to ensure complete isolation
+    newConfigs[cfg.branch - 1] = {
+      ...cfg,
+      conditions: cfg.conditions.map(cond => ({ ...cond })),
+      operators: cfg.operators ? [...cfg.operators] : [],
+    };
     onUpdateConfigs(newConfigs);
   };
 

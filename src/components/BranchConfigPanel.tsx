@@ -60,42 +60,50 @@ export const BranchConfigPanel: React.FC<BranchConfigPanelProps> = ({ branchCoun
   );
 
   useEffect(() => {
-    onChange({ branch, name, description, priority, conditions, operators });
+    // Create a deep copy to ensure complete isolation between different node instances
+    onChange({ 
+      branch, 
+      name, 
+      description, 
+      priority, 
+      conditions: conditions.map(cond => ({ ...cond })), 
+      operators: operators ? [...operators] : [],
+    });
     // eslint-disable-next-line
   }, [branch, name, description, priority, conditions, operators]);
 
   const handleOperatorChange = (idx: number, value: 'AND' | 'OR') => {
-    setOperators(prev => prev.map((op, i) => (i === idx ? value : op)));
+    setOperators(prev => [...prev.map((op, i) => (i === idx ? value : op))]);
   };
 
   const handleConditionTypeChange = (idx: number, type: 'always' | 'expression' | 'cooldown') => {
-    setConditions(prev =>
-      prev.map((cond, i) => {
-        if (i !== idx) return cond;
-        if (type === 'always') return { type: 'always' };
-        if (type === 'expression') return { type: 'expression', expression: '' };
-        return { type: 'cooldown', seconds: 0 };
+    setConditions(prev => [
+      ...prev.map((cond, i) => {
+        if (i !== idx) return { ...cond };
+        if (type === 'always') return { type: 'always' } as BranchCondition;
+        if (type === 'expression') return { type: 'expression', expression: '' } as BranchCondition;
+        return { type: 'cooldown', seconds: 0 } as BranchCondition;
       })
-    );
+    ]);
   };
 
   const handleConditionFieldChange = (idx: number, field: 'expression' | 'seconds', value: string | number) => {
-    setConditions(prev =>
-      prev.map((cond, i) => {
-        if (i !== idx) return cond;
+    setConditions(prev => [
+      ...prev.map((cond, i) => {
+        if (i !== idx) return { ...cond };
         if (cond.type === 'expression' && field === 'expression') {
           return { ...cond, expression: value as string };
         }
         if (cond.type === 'cooldown' && field === 'seconds') {
           return { ...cond, seconds: Number(value) };
         }
-        return cond;
+        return { ...cond };
       })
-    );
+    ]);
   };
 
   const addCondition = () => {
-    setConditions(prev => [...prev, { type: 'expression', expression: '' }]);
+    setConditions(prev => [...prev, { type: 'expression', expression: '' } as BranchCondition]);
     setOperators(prev => [...prev, 'AND']);
   };
 

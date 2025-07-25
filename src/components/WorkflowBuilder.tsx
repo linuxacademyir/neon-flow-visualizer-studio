@@ -194,14 +194,73 @@ export const WorkflowBuilder = () => {
         },
       };
     } else if (type === 'controller') {
+      // Create controller-specific default data based on label
+      const controllerData: any = {
+        label,
+        name: label,
+      };
+      
+      // Add router-specific defaults
+      if (label === 'Router') {
+        controllerData.branchCount = 2;
+        controllerData.runMode = 'ALL';
+        controllerData.runNMethod = 'Random';
+        controllerData.branchConfigs = [
+          {
+            branch: 1,
+            name: '',
+            description: '',
+            priority: 1,
+            conditions: [{ type: 'always' }],
+            operators: [],
+          },
+          {
+            branch: 2,
+            name: '',
+            description: '',
+            priority: 1,
+            conditions: [{ type: 'always' }],
+            operators: [],
+          },
+        ];
+      }
+      
+      // Add Join-specific defaults
+      if (label === 'Join') {
+        controllerData.inputCount = 2;
+        controllerData.joinType = 'AND';
+        controllerData.branchConfigs = [
+          {
+            branch: 1,
+            name: '',
+            description: '',
+            priority: 1,
+            conditions: [{ type: 'always' }],
+            operators: [],
+          },
+          {
+            branch: 2,
+            name: '',
+            description: '',
+            priority: 1,
+            conditions: [{ type: 'always' }],
+            operators: [],
+          },
+        ];
+      }
+      
+      // Add Wait-specific defaults
+      if (label === 'Wait') {
+        controllerData.waitType = 'timeout';
+        controllerData.timeout = 60;
+        controllerData.timeoutUnit = 'seconds';
+      }
+      
       newNode = {
         id,
         type: 'controller',
         position,
-        data: {
-          label,
-          name: label,
-        },
+        data: controllerData,
       };
     } else if (type === 'extra') {
       newNode = {
