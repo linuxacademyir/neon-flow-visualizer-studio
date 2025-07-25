@@ -11,6 +11,7 @@ import {
   Node,
   ReactFlowProvider,
   useReactFlow,
+  SelectionMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Plus, Minus, Maximize2 } from 'lucide-react';
@@ -54,6 +55,7 @@ export const WorkflowBuilder = () => {
   const [workflowName, setWorkflowName] = useState('Untitled Workflow');
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [editSidebarOpen, setEditSidebarOpen] = useState(false);
+  const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useReactFlow();
   const [zoom, setZoom] = useState(1);
@@ -97,13 +99,65 @@ export const WorkflowBuilder = () => {
   );
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    setSelectedNode(node);
-    setEditSidebarOpen(true);
+    // Prevent event propagation to avoid triggering pane click
+    event.stopPropagation();
+    
+    // Handle multi-selection with Ctrl/Cmd key
+    if (event.ctrlKey || event.metaKey) {
+      setSelectedNodes(prev => {
+        const isSelected = prev.includes(node.id);
+        if (isSelected) {
+          return prev.filter(id => id !== node.id);
+        } else {
+          return [...prev, node.id];
+        }
+      });
+    } else {
+      // Single selection - only open edit sidebar for single node selection
+      setSelectedNode(node);
+      setEditSidebarOpen(true);
+      setSelectedNodes([node.id]);
+    }
   }, []);
 
-  const onPaneClick = useCallback(() => {
+  const onPaneClick = useCallback((event: React.MouseEvent) => {
+    // Only clear selection if clicking on empty space (not during drag)
+    if (event.detail === 1) { // Single click only
+      setEditSidebarOpen(false);
+      setSelectedNode(null);
+      setSelectedNodes([]);
+    }
+  }, []);
+
+  const onSelectionChange = useCallback(({ nodes: selectedNodes }) => {
+    const selectedNodeIds = selectedNodes.map(node => node.id);
+    setSelectedNodes(selectedNodeIds);
+    
+    // If only one node is selected, allow editing
+    if (selectedNodes.length === 1) {
+      setSelectedNode(selectedNodes[0]);
+      setEditSidebarOpen(true);
+    } else {
+      setSelectedNode(null);
+      setEditSidebarOpen(false);
+    }
+  }, []);
+
+  // Handle drag selection start
+  const onSelectionStart = useCallback((event) => {
+    // Close edit sidebar when starting a selection
     setEditSidebarOpen(false);
     setSelectedNode(null);
+  }, []);
+
+  // Handle drag selection end
+  const onSelectionEnd = useCallback(() => {
+    // Selection change will be handled by onSelectionChange
+  }, []);
+
+  // Handle selection drag
+  const onSelectionDrag = useCallback((event, selection) => {
+    // This will be called during box selection
   }, []);
 
   const deleteNode = useCallback((nodeId: string) => {
@@ -309,6 +363,7 @@ export const WorkflowBuilder = () => {
 
   const enhancedNodes = nodes.map(node => ({
     ...node,
+    selected: selectedNodes.includes(node.id),
     data: {
       ...node.data,
       onEdit: editNode,
@@ -360,6 +415,10 @@ export const WorkflowBuilder = () => {
             onConnect={onConnect}
             onNodeClick={onNodeClick}
             onPaneClick={onPaneClick}
+            onSelectionChange={onSelectionChange}
+            onSelectionStart={onSelectionStart}
+            onSelectionEnd={onSelectionEnd}
+            onSelectionDrag={onSelectionDrag}
             nodeTypes={nodeTypes}
             className="workflow-canvas"
             proOptions={{ hideAttribution: true }}
@@ -367,6 +426,16 @@ export const WorkflowBuilder = () => {
             maxZoom={8}
             minZoom={0.01}
             onMove={handleMove}
+            selectionMode={SelectionMode.Partial}
+            multiSelectionKeyCode={['Meta', 'Control']}
+            selectNodesOnDrag={false}
+            selectionOnDrag={true}
+            panOnDrag={true} // Enable panning by default
+            selectionKeyCode={['Shift']} // Require Shift key for box selection
+            panOnScroll={true} // Enable pan on scroll
+            zoomOnScroll={true} // Enable zoom on scroll
+            zoomOnPinch={true} // Enable zoom on pinch
+            defaultViewport={{ x: 0, y: 0, zoom: 1 }}
           >
             <Background color="#333" gap={20} />
             <div className="absolute bottom-6 right-6 z-50 flex flex-col items-center gap-2 bg-gray-800/90 rounded-lg shadow-lg p-2 border border-gray-700">
