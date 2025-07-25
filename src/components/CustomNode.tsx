@@ -21,6 +21,10 @@ import {
   Ban,
   ListChecks,
   Plus,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  Square,
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
@@ -197,6 +201,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'end', label: 'End' })}>End</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
@@ -340,6 +345,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'end', label: 'End' })}>End</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
@@ -469,6 +475,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'end', label: 'End' })}>End</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
@@ -995,6 +1002,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'action', label: 'Action' })}>Action</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'event', label: 'Event' })}>Event</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'form', label: 'Form' })}>Form</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'end', label: 'End' })}>End</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Router' })}>Router</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Join' })}>Join</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => data.onAddNextNode(id, { type: 'controller', label: 'Wait' })}>Wait</DropdownMenuItem>
@@ -1005,6 +1013,93 @@ export const CustomNode = memo(({ id, data, type }: any) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (type === 'end') {
+    return (
+      <div
+        className="workflow-node workflow-node--end"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{ 
+          position: 'relative', 
+          minWidth: 120, 
+          width: 120, 
+          height: 80, 
+          background: '#111', 
+          border: '2px solid #FF0000', // Always red as requested
+          boxShadow: '0 0 8px 2px #FF000088',
+          borderRadius: '8px', // Rectangle with slightly rounded corners
+        }}
+      >
+        <Handle
+          type="target"
+          position={Position.Left}
+          className="workflow-handle workflow-handle--target"
+        />
+        <div className="workflow-node__content flex flex-col items-center justify-center gap-1 h-full">
+          <Square size={18} fill="currentColor" /> {/* Stop icon - solid square */}
+          <span className="workflow-node__label font-semibold text-sm">{data.name || 'End'}</span>
+        </div>
+        {/* End nodes typically don't have outgoing connections, so no source handle */}
+        {typeof data.onEdit === 'function' && hovered && (
+          <div className="workflow-node__toolbar">
+            <button
+              className="workflow-node__button"
+              onClick={handleEdit}
+              title="Edit"
+            >
+              <Edit size={12} />
+            </button>
+            <button
+              className="workflow-node__button"
+              onClick={handleDelete}
+              title="Delete"
+            >
+              <Trash2 size={12} />
+            </button>
+          </div>
+        )}
+        {showTooltip && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '-32px',
+              left: '-8px',
+              background: 'rgba(0,0,0,0.92)',
+              color: '#fff',
+              padding: '3px 6px',
+              borderRadius: '7px',
+              fontSize: '0.48rem',
+              fontWeight: 500,
+              whiteSpace: 'pre-line',
+              zIndex: 100,
+              pointerEvents: 'none',
+              boxShadow: '0 2px 8px 0 rgba(0,0,0,0.18)',
+              minWidth: '32px',
+              maxWidth: '120px',
+              textAlign: 'center',
+            }}
+          >
+            {description}
+            <span
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '100%',
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderTop: '7px solid rgba(0,0,0,0.92)',
+                content: '""',
+                display: 'block',
+              }}
+            />
           </div>
         )}
       </div>

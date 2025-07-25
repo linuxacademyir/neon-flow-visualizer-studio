@@ -7,7 +7,7 @@ const nodeCategories = {
     color: '#00bfff',
     shape: 'rounded-rectangle',
     icon: Play,
-    items: ['Action + Event', 'Action', 'Event', 'Form']
+    items: ['Action + Event', 'Action', 'Event', 'Form', 'End']
   },
   controllers: {
     color: '#ff00ff',
@@ -164,6 +164,25 @@ export const NodeSidebar = ({ setNodes, setEdges }: any) => {
       setNodes((nds: any) => [...nds, formNode]);
       return;
     }
+    if (type === 'main' && label === 'End') {
+      const endId = `${type}-end-${Date.now()}`;
+      const endNode = {
+        id: endId,
+        type: 'end',
+        position,
+        data: {
+          label: 'End',
+          name: 'End',
+          endType: 'success', // default end type (success, error, lost)
+          onDelete: (nodeId: string) => {
+            setNodes((nds: any) => nds.filter((node: any) => node.id !== nodeId));
+          },
+          onEdit: (nodeId: string) => {},
+        },
+      };
+      setNodes((nds: any) => [...nds, endNode]);
+      return;
+    }
     const id = `${type}-${Date.now()}`;
     const newNode = {
       id,
@@ -215,11 +234,13 @@ export const NodeSidebar = ({ setNodes, setEdges }: any) => {
                         ? '3px solid #D726FF'
                         : item === 'Form' && category === 'main'
                           ? '3px solid #FF073A'
+                        : item === 'End' && category === 'main'
+                          ? '3px solid #FF0000'
                         : category === 'controllers'
                           ? '3px solid #39FF14'
                         : item === 'Action + Event'
                           ? '3px solid transparent'
-                          : `3px solid ${config.color}`,
+                        : `3px solid ${config.color}`,
                       ...(item === 'Action + Event' && {
                         borderImage: 'linear-gradient(to bottom, #00bfff 50%, #D726FF 50%) 1',
                       })

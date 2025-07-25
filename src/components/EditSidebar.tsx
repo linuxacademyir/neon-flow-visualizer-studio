@@ -128,6 +128,7 @@ export const EditSidebar = ({
   const isCommentNode = selectedNode && selectedNode.data.label === 'Comment';
   const isEventNode = selectedNode?.type === 'event';
   const isFormNode = selectedNode?.type === 'form';
+  const isEndNode = selectedNode?.type === 'end';
 
   // Helper for updating questions array
   const handleQuestionChange = (idx: number, updates: any) => {
@@ -257,6 +258,22 @@ export const EditSidebar = ({
                 />
               </div>
             </>
+          )}
+          {isEndNode && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                End Type
+              </label>
+              <select
+                value={selectedNode.data.endType || 'success'}
+                onChange={(e) => onUpdateNode(selectedNode.id, { endType: e.target.value })}
+                className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <option value="success">Success</option>
+                <option value="error">Error</option>
+                <option value="lost">Lost</option>
+              </select>
+            </div>
           )}
           {selectedNode && isEventNode && (
             <>

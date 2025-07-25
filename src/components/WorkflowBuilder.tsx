@@ -27,6 +27,7 @@ const nodeTypes = {
   extra: CustomNode,
   event: CustomNode,
   form: CustomNode,
+  end: CustomNode,
 };
 
 // Email signature workflow initial setup
@@ -191,6 +192,17 @@ export const WorkflowBuilder = () => {
               options: [],
             },
           ],
+        },
+      };
+    } else if (type === 'end') {
+      newNode = {
+        id,
+        type: 'end',
+        position,
+        data: {
+          label: 'End',
+          name: 'End',
+          endType: 'success', // default end type (success, error, lost)
         },
       };
     } else if (type === 'controller') {
