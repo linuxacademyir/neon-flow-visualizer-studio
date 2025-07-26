@@ -1,73 +1,143 @@
-# Welcome to your Lovable project
+# Vaza Flow - Workflow Builder
 
-## Project info
+A powerful, visual workflow builder with server-side storage for creating and managing complex automation workflows.
 
-**URL**: https://lovable.dev/projects/53302717-e891-413e-b797-a2fa90df8d53
+## 🌟 Features
 
-## How can I edit this code?
+- **Visual Workflow Builder**: Drag-and-drop interface for creating workflows
+- **Server Storage**: Workflows automatically saved to server (no permissions needed)
+- **Router Branches**: Configure multiple execution paths with conditions
+- **Real-time Editing**: Auto-save functionality with 1-second debouncing
+- **Import/Export**: JSON format for workflow backup and sharing
 
-There are several ways of editing your application.
+## 🚀 Quick Start
 
-**Use Lovable**
+### Method 1: Run Everything Together (Recommended)
+```bash
+# Install all dependencies (frontend + backend)
+npm install
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/53302717-e891-413e-b797-a2fa90df8d53) and start prompting.
+# Start both frontend and backend servers
+npm run start:full
+```
 
-Changes made via Lovable will be committed automatically to this repo.
+### Method 2: Run Separately
+```bash
+# Terminal 1: Start the backend server
+npm run server:dev
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Terminal 2: Start the frontend
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 📁 Project Structure
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+vaza-flow/
+├── src/                 # Frontend React application
+├── server/             # Backend Express server
+│   ├── workflows/      # Auto-created workflow storage
+│   ├── index.js       # Server entry point
+│   └── package.json   # Server dependencies
+├── package.json       # Frontend dependencies & scripts
+└── README.md         # This file
+```
 
-**Use GitHub Codespaces**
+## 💾 Workflow Storage
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Workflows are automatically stored on the server in `server/workflows/` as JSON files:
 
-## What technologies are used for this project?
+- **Location**: `server/workflows/my-workflow.json`
+- **Format**: Standard JSON with nodes, edges, and metadata
+- **Auto-save**: Changes saved automatically after 1 second of inactivity
+- **No Permissions**: No browser file system permissions required
 
-This project is built with:
+## 🔧 Development
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Prerequisites
+- Node.js (v16 or higher)
+- npm
 
-## How can I deploy this project?
+### Installation
 
-Simply open [Lovable](https://lovable.dev/projects/53302717-e891-413e-b797-a2fa90df8d53) and click on Share -> Publish.
+```bash
+# Clone the repository
+git clone <YOUR_GIT_URL>
+cd <YOUR_PROJECT_NAME>
 
-## Can I connect a custom domain to my Lovable project?
+# Install dependencies (this will also install server dependencies)
+npm install
 
-Yes, you can!
+# Start both frontend and backend
+npm run start:full
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Available Scripts
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- `npm run dev` - Start frontend development server
+- `npm run server:dev` - Start backend development server  
+- `npm run start:full` - Start both frontend and backend
+- `npm run build` - Build frontend for production
+- `npm run server` - Start backend in production mode
+
+### Ports
+
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:3001
+
+## 🎯 Usage
+
+1. **Create Workflows**: Use the visual builder to drag and drop nodes
+2. **Configure Branches**: For router nodes, set up multiple execution paths
+3. **Auto-Save**: Workflows are automatically saved as you work
+4. **Load/Switch**: Use the dropdown to switch between saved workflows
+5. **Export/Import**: Download workflows as JSON files for backup
+
+## 🔧 Router Branch Configuration
+
+The router node supports complex branching logic:
+
+- **Multiple Branches**: Configure 2-10 output branches
+- **Branch Names**: Give each branch a descriptive name
+- **Conditions**: Set execution conditions (always, expressions, cooldowns)
+- **Priorities**: Control execution order
+- **Isolated Storage**: Each branch configuration is stored independently
+
+## 🛠️ API Endpoints
+
+The server provides a RESTful API for workflow management:
+
+- `GET /api/workflows` - List all workflows
+- `GET /api/workflows/:name` - Get specific workflow  
+- `POST /api/workflows` - Create/update workflow
+- `DELETE /api/workflows/:name` - Delete workflow
+- `GET /api/health` - Server health check
+
+## 🚀 Deployment
+
+### Frontend
+Build and deploy the frontend to any static hosting service:
+
+```bash
+npm run build
+# Deploy the `dist` folder
+```
+
+### Backend
+Deploy the Express server to any Node.js hosting service:
+
+```bash
+cd server
+npm install --production
+npm start
+```
+
+## 🔧 Technologies
+
+- **Frontend**: React, TypeScript, Vite, Tailwind CSS, React Flow
+- **Backend**: Node.js, Express.js, File System
+- **Storage**: JSON files on server filesystem
+
+## 📝 License
+
+MIT License - feel free to use this project as you see fit!

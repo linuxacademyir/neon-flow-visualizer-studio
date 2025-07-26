@@ -989,6 +989,11 @@ const BranchConfigSidebar: React.FC<BranchConfigSidebarProps> = ({ branchCount, 
         };
       });
       onUpdateConfigs(newConfigs);
+      
+      // Reset selected branch if it's now out of range
+      if (selectedBranch > branchCount) {
+        setSelectedBranch(1);
+      }
     }
     // eslint-disable-next-line
   }, [branchCount]);
@@ -1019,11 +1024,11 @@ const BranchConfigSidebar: React.FC<BranchConfigSidebarProps> = ({ branchCount, 
         </select>
       </div>
       <BranchConfigPanel
-        key={selectedBranch}
         branchCount={branchCount}
         initialConfig={branchConfigs[selectedBranch - 1]}
         onChange={handleBranchChange}
         nodeType={nodeType}
+        selectedBranch={selectedBranch}
       />
     </div>
   );

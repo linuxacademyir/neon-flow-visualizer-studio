@@ -19,6 +19,7 @@ interface BranchConfigPanelProps {
   initialConfig?: BranchConfig;
   onChange: (config: BranchConfig) => void;
   nodeType?: 'router' | 'join';
+  selectedBranch?: number;
 }
 
 function getConditionTypes(nodeType?: 'router' | 'join') {
@@ -43,21 +44,42 @@ function getConditionTypes(nodeType?: 'router' | 'join') {
   ];
 }
 
-export const BranchConfigPanel: React.FC<BranchConfigPanelProps> = ({ branchCount, initialConfig, onChange, nodeType }) => {
-  const [branch] = useState<number>(initialConfig?.branch ?? 1);
-  const [name, setName] = useState<string>(initialConfig?.name ?? '');
-  const [description, setDescription] = useState<string>(initialConfig?.description ?? '');
-  const [priority, setPriority] = useState<number>(initialConfig?.priority ?? 1);
-  const [conditions, setConditions] = useState<BranchCondition[]>(
-    initialConfig?.conditions?.length
-      ? initialConfig.conditions
-      : [{ type: 'expression', expression: '' }]
-  );
-  const [operators, setOperators] = useState<("AND" | "OR")[]>(
-    initialConfig?.operators?.length === (initialConfig?.conditions?.length || 1) - 1
-      ? initialConfig.operators as ("AND" | "OR")[]
-      : []
-  );
+export const BranchConfigPanel: React.FC<BranchConfigPanelProps> = ({ branchCount, initialConfig, onChange, nodeType, selectedBranch }) => {
+  // Ensure we have a valid config to initialize with
+  const config = initialConfig || {
+    branch: selectedBranch || 1,
+    name: '',
+    description: '',
+    priority: 1,
+    conditions: [{ type: 'expression', expression: '' }] as BranchCondition[],
+    operators: [] as ('AND' | 'OR')[],
+  };
+  
+  const [branch, setBranch] = useState<number>(config.branch);
+  const [name, setName] = useState<string>(config.name);
+  const [description, setDescription] = useState<string>(config.description || '');
+  const [priority, setPriority] = useState<number>(config.priority);
+  const [conditions, setConditions] = useState<BranchCondition[]>(config.conditions);
+  const [operators, setOperators] = useState<("AND" | "OR")[]>(config.operators || []);
+
+  // Update state when selectedBranch or initialConfig changes
+  useEffect(() => {
+    const newConfig = initialConfig || {
+      branch: selectedBranch || 1,
+      name: '',
+      description: '',
+      priority: 1,
+      conditions: [{ type: 'expression', expression: '' }] as BranchCondition[],
+      operators: [] as ('AND' | 'OR')[],
+    };
+    
+    setBranch(newConfig.branch);
+    setName(newConfig.name);
+    setDescription(newConfig.description || '');
+    setPriority(newConfig.priority);
+    setConditions(newConfig.conditions);
+    setOperators(newConfig.operators || []);
+  }, [selectedBranch, initialConfig]);
 
   useEffect(() => {
     // Create a deep copy to ensure complete isolation between different node instances

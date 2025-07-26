@@ -20,6 +20,7 @@ import { CustomNode } from './CustomNode';
 import { NodeSidebar } from './NodeSidebar';
 import { EditSidebar } from './EditSidebar';
 import { Navbar } from './Navbar';
+import { apiStorage, WorkflowData } from '../utils/apiStorage';
 
 const nodeTypes = {
   trigger: CustomNode,
@@ -59,21 +60,36 @@ export const WorkflowBuilder = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useReactFlow();
   const [zoom, setZoom] = useState(1);
+  const [serverAvailable, setServerAvailable] = useState(false);
+  const [availableWorkflows, setAvailableWorkflows] = useState<string[]>([]);
 
-  // Load from localStorage on mount
+  // Initialize API storage and load workflows
   useEffect(() => {
-    const savedNodes = localStorage.getItem('workflow_nodes');
-    const savedEdges = localStorage.getItem('workflow_edges');
-    const savedName = localStorage.getItem('workflow_name');
-    if (savedNodes && savedEdges) {
-      try {
-        setNodes(JSON.parse(savedNodes));
-        setEdges(JSON.parse(savedEdges));
-      } catch {}
-    }
-    if (savedName) {
-      setWorkflowName(savedName);
-    }
+    const initializeStorage = async () => {
+      const available = await apiStorage.isServerAvailable();
+      setServerAvailable(available);
+
+      if (available) {
+        // Load available workflows list
+        const workflows = await apiStorage.listWorkflows();
+        setAvailableWorkflows(workflows);
+        
+        // If there are existing workflows, optionally load the last one
+        // For now, start with empty workflow unless user selects one
+      } else {
+        // Fallback to localStorage
+        const savedData = apiStorage.loadFromLocalStorage();
+        if (savedData.nodes && savedData.edges) {
+          setNodes(savedData.nodes);
+          setEdges(savedData.edges);
+        }
+        if (savedData.name) {
+          setWorkflowName(savedData.name);
+        }
+      }
+    };
+
+    initializeStorage();
     // eslint-disable-next-line
   }, []);
 
@@ -86,12 +102,34 @@ export const WorkflowBuilder = () => {
     // eslint-disable-next-line
   }, [reactFlowInstance]);
 
-  // Save to localStorage on nodes/edges/name change
+  // Auto-save workflow when changes are made
   useEffect(() => {
-    localStorage.setItem('workflow_nodes', JSON.stringify(nodes));
-    localStorage.setItem('workflow_edges', JSON.stringify(edges));
-    localStorage.setItem('workflow_name', workflowName);
-  }, [nodes, edges, workflowName]);
+    const saveWorkflow = async () => {
+      if (!workflowName || workflowName === 'Untitled Workflow') return;
+
+      const workflowData: WorkflowData = {
+        name: workflowName,
+        nodes,
+        edges,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      if (serverAvailable) {
+        await apiStorage.saveWorkflow(workflowData);
+        // Refresh available workflows list
+        const workflows = await apiStorage.listWorkflows();
+        setAvailableWorkflows(workflows);
+      } else {
+        // Fallback to localStorage
+        apiStorage.saveToLocalStorage(workflowData);
+      }
+    };
+
+    // Debounce saves to avoid excessive API calls
+    const timeoutId = setTimeout(saveWorkflow, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [nodes, edges, workflowName, serverAvailable]);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -394,6 +432,62 @@ export const WorkflowBuilder = () => {
     reactFlowInstance.setViewport({ x: 0, y: 0, zoom: 1 });
   };
 
+  // Load a specific workflow by name
+  const loadWorkflow = async (name: string) => {
+    if (serverAvailable) {
+      const workflow = await apiStorage.loadWorkflow(name);
+      if (workflow) {
+        setNodes(workflow.nodes);
+        setEdges(workflow.edges);
+        setWorkflowName(workflow.name);
+      }
+    }
+  };
+
+  // Create a new workflow
+  const createNewWorkflow = () => {
+    setNodes([]);
+    setEdges([]);
+    setWorkflowName('Untitled Workflow');
+  };
+
+  // Delete a workflow
+  const deleteWorkflow = async (name: string) => {
+    if (serverAvailable) {
+      const success = await apiStorage.deleteWorkflow(name);
+      if (success) {
+        // Refresh available workflows list
+        const workflows = await apiStorage.listWorkflows();
+        setAvailableWorkflows(workflows);
+        
+        // If we just deleted the current workflow, create a new one
+        if (workflowName === name) {
+          createNewWorkflow();
+        }
+      }
+    }
+  };
+
+  // Refresh workflows list
+  const refreshWorkflows = async () => {
+    if (serverAvailable) {
+      const workflows = await apiStorage.listWorkflows();
+      setAvailableWorkflows(workflows);
+    }
+  };
+
+  // Import workflow and save to server
+  const importWorkflow = async (workflowData: WorkflowData) => {
+    if (serverAvailable) {
+      const success = await apiStorage.saveWorkflow(workflowData);
+      if (success) {
+        // Refresh available workflows list
+        const workflows = await apiStorage.listWorkflows();
+        setAvailableWorkflows(workflows);
+      }
+    }
+  };
+
   return (
     <div className="workflow-builder">
       <Navbar
@@ -403,6 +497,13 @@ export const WorkflowBuilder = () => {
         setEdges={setEdges}
         workflowName={workflowName}
         setWorkflowName={setWorkflowName}
+        availableWorkflows={availableWorkflows}
+        onLoadWorkflow={loadWorkflow}
+        onCreateNew={createNewWorkflow}
+        onDeleteWorkflow={deleteWorkflow}
+        fileStorageAvailable={serverAvailable}
+        onRefreshWorkflows={refreshWorkflows}
+        onImportWorkflow={importWorkflow}
       />
       <div className="workflow-builder__content">
         <NodeSidebar setNodes={setNodes} setEdges={setEdges} />
