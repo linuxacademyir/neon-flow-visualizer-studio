@@ -921,7 +921,7 @@ export const CustomNode = memo(({ id, data, type }: any) => {
         className="workflow-node workflow-node--form"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        style={{ position: 'relative', minWidth: 180, width: dynamicWidth, minHeight: baseHeight, height: dynamicHeight, background: '#111', border: '2px solid #FF073A', boxShadow: '0 0 8px 2px #FF073A88' }}
+        style={{ position: 'relative', minWidth: 180, width: dynamicWidth, minHeight: baseHeight, height: dynamicHeight, background: '#111', border: '2px solid #FF8C00', boxShadow: '0 0 8px 2px #FF8C0088' }}
       >
         {/* Hidden span for measuring text width */}
         <span

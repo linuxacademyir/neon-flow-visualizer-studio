@@ -233,7 +233,7 @@ export const NodeSidebar = ({ setNodes, setEdges }: any) => {
                       borderLeft: item === 'Event'
                         ? '3px solid #D726FF'
                         : item === 'Form' && category === 'main'
-                          ? '3px solid #FF073A'
+                          ? '3px solid #FF8C00'
                         : item === 'End' && category === 'main'
                           ? '3px solid #FF0000'
                         : category === 'controllers'
